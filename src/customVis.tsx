@@ -76,12 +76,14 @@ console.log(fieldOptions2)
         label: "Title",
         placeholder: "Title",
         order: 1,
+        section: "Title",
       },
       showXAxisLabel: {
         type: "boolean",
         label: "Show X Axis Label",
         default: true,
         order: 2,
+        section: "X-Axis",
       },
       xAxisDropdown: {
         type: "string",
@@ -90,7 +92,8 @@ console.log(fieldOptions2)
         placeholder: "Please Select",
         values: fieldOptions2,
         order: 3,
-        default:''
+        default:'',
+        section: "X-Axis",
       },
       // xAxisText: {
       //   type: "string",
@@ -104,6 +107,7 @@ console.log(fieldOptions2)
         label: "Show Y Axis Label",
         default: true,
         order: 5,
+        section: "Y-Axis",
       },
 
       yAxisDropdown: {
@@ -113,7 +117,8 @@ console.log(fieldOptions2)
         placeholder: "Please Select",
         values: fieldOptions2,
         order: 6,
-        default:''
+        default:'',
+        section: "Y-Axis",
       },
       // yAxisText: {
       //   type: "string",
@@ -127,6 +132,7 @@ console.log(fieldOptions2)
         label: "Format Y Axis as Currency",
         default: true,
         order: 10,
+        section: "Y-Axis",
       },
 
 
@@ -137,28 +143,86 @@ console.log(fieldOptions2)
             placeholder: "Please Select",
             values: fieldOptions,
             order: 11,
-            default:''
+            default:'',
+            section: "Y-Axis",
           },
       showPoints: {
         type: "boolean",
         label: "Show Points Sized By",
         default: false,
         order: 12,
+        section: "X-Axis",
       },
 
-      showXGridLines: {
-        type: "boolean",
-        label: "Show X Grid Lines",
-        default: false,
+      choosePoints: {
+        type: "string",
+        label: "Choose Label for Points Sized By",
+        display: "select",
+        placeholder: "Please Select",
+        values: fieldOptions2,
         order: 13,
-      },
-      showYGridLines: {
-        type: "boolean",
-        label: "Show Y Grid Lines",
-        default: true,
-        order: 14,
+        default:'',
+        section: "X-Axis",
       },
 
+      showYAxis2: {
+        type: "boolean",
+        label: "Show Y Axis Right Side Label",
+        default: false,
+        order: 14,
+        section: "Y-Axis",
+      },
+
+      yAxisRightDropdown: {
+        type: "string",
+        label: "Choose Y Axis Right Side Label",
+        display: "select",
+        placeholder: "Please Select",
+        values: fieldOptions2,
+        order: 15,
+        default:'',
+        section: "Y-Axis",
+      },
+
+
+
+            showYAxis2Value: {
+              type: "boolean",
+              label: "Show Y Axis Right Side Value",
+              default: false,
+              order: 16,
+              section: "Y-Axis",
+            },
+
+            yAxisRightValues: {
+              type: "string",
+              label: "Choose Y Axis Right Side Value",
+              display: "select",
+              placeholder: "Please Select",
+              values: fieldOptions,
+              order: 17,
+              default:'',
+              section: "Y-Axis",
+            },
+
+            isYAxisCurrency2: {
+              type: "boolean",
+              label: "Format Y Axis Right Side as Currency",
+              default: false,
+              order: 18,
+              section: "Y-Axis",
+            },
+
+            symbol2: {
+             type: "string",
+             label: "Select Currency Symbol for Right Side",
+             display: "select",
+             placeholder: "Please Select",
+             values: fieldOptions,
+             order: 19,
+             default:'',
+             section: "Y-Axis",
+           },
 
 
       // kpiUnit: {
@@ -171,7 +235,8 @@ console.log(fieldOptions2)
         type: "boolean",
         label: "Stacked",
         default: false,
-        order: 15,
+        order: 20,
+        section: "Style",
       },
       // showLineChartGradient: {
       //   type: "boolean",
@@ -179,11 +244,28 @@ console.log(fieldOptions2)
       //   default: false,
       //   order: 12,
       // },
+
+      showXGridLines: {
+        type: "boolean",
+        label: "Show X Grid Lines",
+        default: false,
+        order: 21,
+          section: "Style",
+      },
+      showYGridLines: {
+        type: "boolean",
+        label: "Show Y Grid Lines",
+        default: true,
+        order: 22,
+          section: "Style",
+      },
+
       showAllValuesInTooltip: {
         type: "boolean",
         label: "Show All Row Values in Tooltip",
         default: true,
-        order: 16,
+        order: 23,
+          section: "Style",
       },
     };
 

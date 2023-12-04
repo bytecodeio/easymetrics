@@ -9,7 +9,7 @@ import {
 } from "../types";
 import React, { useEffect, useMemo, useState } from "react";
 
-import { formatNumber } from "../utils";
+import { formatNumber, formatNumber2 } from "../utils";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -114,7 +114,14 @@ function BarLineVis({
     showPoints,
     xAxisDropdown,
     yAxisDropdown,
-    symbol
+    symbol,
+    symbol2,
+    showYAxis2,
+    yAxisRightDropdown,
+    showYAxis2Value,
+    yAxisRightValues,
+    isYAxisCurrency2,
+    choosePoints
   } = config;
 
 
@@ -124,11 +131,11 @@ function BarLineVis({
     xAxisDropdown: d,
     yAxisDropdown:config.yAxisDropdown.split(",")[i],
     symbol:config.symbol.split(",")[i],
-    // xAxisDropdown:config.yAxisDropdown.split(",")[i],
-
+    yAxisRightDropdown:config.yAxisRightDropdown.split(",")[i],
+    yAxisRightValues:config.yAxisRightValues.split(",")[i],
+    symbol2:config.symbol2.split(",")[i],
 
     }))
-
 
 
 
@@ -327,6 +334,7 @@ console.log(text)
             pointBackgroundColor: `#${colors[i]}`,
             data: columnData,
             yAxisID: "yLeft",
+            yAxisID: "yRight",
             fill,
           });
 
@@ -381,6 +389,7 @@ console.log(text)
   function tooltipHandler(
     context: TooltipContext,
     isYAxisCurrency: boolean,
+    isYAxisCurrency2: boolean,
     setTooltip: (newState: TooltipData | null) => void
   ) {
     const isTooltipVisible = context.tooltip.opacity !== 0;
@@ -423,6 +432,9 @@ console.log(text)
               measureValue: `${
                 isYAxisCurrency ? "$" : ""
               }${currentPeriodValue}`,
+              measureValue: `${
+                isYAxisCurrency2 ? "$" : ""
+              }${currentPeriodValue}`,
 
               periodComparisonValue,
               pivotColor: `#${colors[i]}`,
@@ -458,6 +470,10 @@ console.log(text)
             measureValue: `${isYAxisCurrency ? "$" : ""}${
               context.tooltip.dataPoints[0].formattedValue
             }`,
+            measureValue: `${isYAxisCurrency2 ? "$" : ""}${
+              context.tooltip.dataPoints[0].formattedValue
+            }`,
+
 
             periodComparisonValue,
             pivotColor: context.tooltip.dataPoints[0].dataset
@@ -497,12 +513,23 @@ let theSymbol = result[0]
 
 
 
+let result2 = Content.map(function(val, i){ return val.symbol2 });
+
+let theSymbol2 = result2[0]
+
 let xAxisDropdownValues = Content.map(function(val, i){ return val.xAxisDropdown });
 
 
 let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown });
 
-console.log(xAxisDropdownValues, "result");
+
+
+let yAxisRightDropdownValues = Content.map(function(val, i){ return val.yAxisRightDropdown });
+
+let yAxisRightValues = Content.map(function(val, i){ return val.yAxisRightValues });
+
+
+
 
 
   const chartOptions: ChartOptions<"scatter" | "bar"> = useMemo(
@@ -561,7 +588,7 @@ console.log(xAxisDropdownValues, "result");
           enabled: false,
           position: "nearest",
           external: (context) =>
-            tooltipHandler(context, isYAxisCurrency, setTooltip),
+            tooltipHandler(context, isYAxisCurrency, isYAxisCurrency2, setTooltip),
         },
       },
       scales: {
@@ -573,7 +600,7 @@ console.log(xAxisDropdownValues, "result");
           stacked: isStacked,
           title: {
             display: showXAxisLabel,
-            text: `${showPoints ? points : ""} ${xAxisDropdown ?  xAxisDropdownValues  : dimensionLabel }`,
+            text: `${showPoints ? choosePoints : ""} ${xAxisDropdown ?  xAxisDropdownValues  : dimensionLabel }`,
             font: {
               size: 14
             }
@@ -589,6 +616,7 @@ console.log(xAxisDropdownValues, "result");
           ticks: {
 
             callback: function (value: number) {
+
               return `${symbol ? theSymbol : text}${formatNumber(value)}`;
             },
           },
@@ -599,7 +627,35 @@ console.log(xAxisDropdownValues, "result");
               size: 14
             }
           },
+
         },
+
+        yRight: {
+          grid: {
+            display: false,
+          },
+          position: "right" as const,
+
+          ticks: {
+
+            display: showYAxis2Value,
+
+
+            callback: function (value: number) {
+      
+              return `${symbol2 ? theSymbol2 : text}${formatNumber(yAxisRightValues)}`;
+            },
+          },
+          title: {
+            display: showYAxis2,
+            text: `${yAxisRightDropdown ?  yAxisRightDropdownValues  : measureLabel }`,
+            font: {
+              size: 14
+            }
+          },
+
+        },
+
       },
     }),
     []
