@@ -27,7 +27,43 @@ looker.plugins.visualizations.add({
 
 
 
+    const { dimension_like: dimensionLike } = queryResponse.fields;
 
+    const dimensions1 = dimensionLike.map((dimension) => ({
+       label: dimension.label_short ?? dimension.label,
+       name: dimension.name
+
+
+     }));
+
+
+
+     const { measure_like: measureLike } = queryResponse.fields;
+
+
+     const measures1 = measureLike.map((measure) => ({
+       label: measure.label_short ?? measure.label,
+       name: measure.name,
+     }));
+
+
+
+
+     const fieldOptions = [...dimensions1, ...measures1].map((dim) => ({
+         [dim.label]: queryResponse.data.map(row => row[dim.name].value).join(",")
+       }));
+
+
+console.log(fieldOptions)
+
+
+const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
+    [dim.label]: dim.label
+
+
+  }));
+
+console.log(fieldOptions2)
 
     const lookerVis = this;
 
@@ -47,48 +83,84 @@ looker.plugins.visualizations.add({
         default: true,
         order: 2,
       },
-      xAxisText: {
+      xAxisDropdown: {
         type: "string",
-        label: "X Axis Text",
-        default: "X Axis",
+        label: "Choose X Axis Value",
+        display: "select",
+        placeholder: "Please Select",
+        values: fieldOptions2,
         order: 3,
+        default:''
       },
+      // xAxisText: {
+      //   type: "string",
+      //   label: "Write X Axis Text Instead",
+      //   default: "X Axis",
+      //   order: 4,
+      // },
+
       showYAxisLabel: {
         type: "boolean",
         label: "Show Y Axis Label",
         default: true,
-        order: 4,
-      },
-      yAxisText: {
-        type: "string",
-        label: "Y Axis Text",
-        default: "Y Axis",
         order: 5,
       },
+
+      yAxisDropdown: {
+        type: "string",
+        label: "Choose Y Axis Value",
+        display: "select",
+        placeholder: "Please Select",
+        values: fieldOptions2,
+        order: 6,
+        default:''
+      },
+      // yAxisText: {
+      //   type: "string",
+      //   label: "Write Y Axis Text Instead",
+      //   default: "Y Axis",
+      //   order: 7,
+      // },
+
+      isYAxisCurrency: {
+        type: "boolean",
+        label: "Format Y Axis as Currency",
+        default: true,
+        order: 10,
+      },
+
+
+           symbol: {
+            type: "string",
+            label: "Select Currency Symbol",
+            display: "select",
+            placeholder: "Please Select",
+            values: fieldOptions,
+            order: 11,
+            default:''
+          },
+      showPoints: {
+        type: "boolean",
+        label: "Show Points Sized By",
+        default: false,
+        order: 12,
+      },
+
       showXGridLines: {
         type: "boolean",
         label: "Show X Grid Lines",
         default: false,
-        order: 6,
+        order: 13,
       },
       showYGridLines: {
         type: "boolean",
         label: "Show Y Grid Lines",
         default: true,
-        order: 7,
+        order: 14,
       },
-      isYAxisCurrency: {
-        type: "boolean",
-        label: "Format Y Axis as Currency",
-        default: true,
-        order: 8,
-      },
-      showPoints: {
-        type: "boolean",
-        label: "Show Points Sized By",
-        default: false,
-        order: 9,
-      },
+
+
+
       // kpiUnit: {
       //   type: "string",
       //   label: "KPI Unit",
@@ -99,7 +171,7 @@ looker.plugins.visualizations.add({
         type: "boolean",
         label: "Stacked",
         default: false,
-        order: 11,
+        order: 15,
       },
       // showLineChartGradient: {
       //   type: "boolean",
@@ -111,7 +183,7 @@ looker.plugins.visualizations.add({
         type: "boolean",
         label: "Show All Row Values in Tooltip",
         default: true,
-        order: 13,
+        order: 16,
       },
     };
 
@@ -138,15 +210,6 @@ looker.plugins.visualizations.add({
       pivots: pivots?.map((p) => p.name),
     };
 
-
-
-
-    // const { dimension_like: dimensionLike } = queryResponse.fields;
-    //
-    // const dimensionLabel = dimensionLike.map((dimension) => (
-    //    dimension.label_short ?? dimension.label,
-    //
-    //  ));
 
 
 

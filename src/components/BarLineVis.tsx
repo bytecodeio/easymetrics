@@ -111,8 +111,27 @@ function BarLineVis({
     isStacked,
     showLineChartGradient,
     showAllValuesInTooltip,
-    showPoints
+    showPoints,
+    xAxisDropdown,
+    yAxisDropdown,
+    symbol
   } = config;
+
+
+
+
+    const Content = config.xAxisDropdown.split(",").map((d, i) => ({
+    xAxisDropdown: d,
+    yAxisDropdown:config.yAxisDropdown.split(",")[i],
+    symbol:config.symbol.split(",")[i],
+    // xAxisDropdown:config.yAxisDropdown.split(",")[i],
+
+
+    }))
+
+
+
+
 
   // Chart type toggle
   interface ChartTypeOption {
@@ -185,9 +204,6 @@ let points = points.toString()
 
 
 
-console.log(points)
-
-
 // let elem = document.getElementById("vis-wrapper");
 //
 // let isMainPresent = elem.classList.contains("hidePoints");
@@ -215,7 +231,7 @@ let text = cols_to_hide.toString()
   );
 
 
-
+console.log(text)
   // const colors = ["#6253DA", "#D0D9E1", "#6CBFEF", "#A3D982", "#E192ED"];
   const colors = [
     '1A73E8',
@@ -240,13 +256,17 @@ let text = cols_to_hide.toString()
     'FF8168',
   ];
 
+
+
+
+
   const hasPivot = !!fields.pivots && fields.pivots.length > 0;
 
   const hasNoPivot = !!fields.pivots && fields.pivots.length === 0;
 
   const fill = showLineChartGradient ? "origin" : false;
 
-  // console.log(hasPivot, hasNoPivot, "ekbeibew")
+
 
   const defaultChartData: ChartData<
     | "bar"
@@ -471,8 +491,20 @@ let text = cols_to_hide.toString()
 
 
 
+let result = Content.map(function(val, i){ return val.symbol });
 
-  // chart options
+let theSymbol = result[0]
+
+
+
+let xAxisDropdownValues = Content.map(function(val, i){ return val.xAxisDropdown });
+
+
+let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown });
+
+console.log(xAxisDropdownValues, "result");
+
+
   const chartOptions: ChartOptions<"scatter" | "bar"> = useMemo(
     () => ({
       layout: {
@@ -541,7 +573,7 @@ let text = cols_to_hide.toString()
           stacked: isStacked,
           title: {
             display: showXAxisLabel,
-            text: `${showPoints ? points : ""} ${dimensionLabel}`,
+            text: `${showPoints ? points : ""} ${xAxisDropdown ?  xAxisDropdownValues  : dimensionLabel }`,
             font: {
               size: 14
             }
@@ -557,12 +589,12 @@ let text = cols_to_hide.toString()
           ticks: {
 
             callback: function (value: number) {
-              return `${isYAxisCurrency ? text : ""}${formatNumber(value)}`;
+              return `${symbol ? theSymbol : text}${formatNumber(value)}`;
             },
           },
           title: {
             display: showYAxisLabel,
-            text: measureLabel,
+            text: `${yAxisDropdown ?  yAxisDropdownValues  : measureLabel }`,
             font: {
               size: 14
             }
@@ -572,6 +604,9 @@ let text = cols_to_hide.toString()
     }),
     []
   );
+
+
+
 
   // KPI value
   const kpiValue = data.reduce((total, currentRow) => {
@@ -599,6 +634,8 @@ let text = cols_to_hide.toString()
     <div id="vis-wrapper" className={`${config.showPoints ? "points hidePoints" : "points"}`}>
     <div id="across">
     <div id="title-kpi-wrapper">
+
+
       <div id="title">{title}</div>
       {/*{showKpi && (
         <div id="kpi">
