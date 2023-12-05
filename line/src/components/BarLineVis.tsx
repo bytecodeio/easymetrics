@@ -339,7 +339,8 @@ console.log(text)
         );
 
 
-        datasets.push({
+        datasets.push(
+          {
           type: chartType,
           label: measureLabel,
           backgroundColor:
@@ -347,9 +348,21 @@ console.log(text)
           borderColor: `#${colors[0]}`,
           pointBackgroundColor: `#${colors[0]}`,
           data: data.map((row) => row[measureName].value),
-          yAxisID: "yLeft",
+          yAxisID: "yRight",
           fill,
-        });
+        },
+        {
+        type: chartType,
+        label: measureLabel,
+        backgroundColor:
+          chartType === "line" ? gradientFill : `#${colors[0]}`,
+        borderColor: `#${colors[0]}`,
+        pointBackgroundColor: `#${colors[0]}`,
+        data: data.map((row) => row[measureName].value),
+        yAxisID: "yLeft",
+        fill,
+      }
+      );
       }
       setChartData({ labels, datasets });
     }
@@ -499,7 +512,7 @@ console.log(text)
       yAxisDropdown:config.yAxisDropdown.split(",")[i],
       symbol:config.symbol.split(",")[i],
       yAxisRightDropdown:config.yAxisRightDropdown.split(",")[i],
-      yAxisRightValues:config.yAxisRightValues.split(",")[i],
+      // yAxisRightValues:config.yAxisRightValues.split(",")[i],
       symbol2:config.symbol2.split(",")[i],
 
       }))
@@ -534,7 +547,7 @@ let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown
 
 let yAxisRightDropdownValues = Content.map(function(val, i){ return val.yAxisRightDropdown });
 
-let yAxisRightValues = Content.map(function(val, i){ return val.yAxisRightValues });
+// let yAxisRightValues = Content.map(function(val, i){ return val.yAxisRightValues });
 
 
 
@@ -639,15 +652,17 @@ let yAxisRightValues = Content.map(function(val, i){ return val.yAxisRightValues
             display: false,
           },
           position: "right" as const,
-
+           display: true,
           ticks: {
+
+
 
             display: showYAxis2Value,
 
 
-            callback: function (value: number) {
 
-              return `${symbol2 ? theSymbol2 : text}${formatNumber(yAxisRightValues)}`;
+            callback: function (value: number) {
+              return `${symbol2 ? theSymbol2 : text}${formatNumber(value)}`;
             },
           },
           title: {

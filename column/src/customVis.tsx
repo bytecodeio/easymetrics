@@ -162,24 +162,24 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
       //   section: "X-Axis",
       // },
 
-      showYAxis2: {
-        type: "boolean",
-        label: "Show Y Axis Right Side Label",
-        default: false,
-        order: 14,
-        section: "Y-Axis",
-      },
-
-      yAxisRightDropdown: {
-        type: "string",
-        label: "Choose Y Axis Right Side Label",
-        display: "select",
-        placeholder: "Please Select",
-        values: fieldOptions2,
-        order: 15,
-        default:'',
-        section: "Y-Axis",
-      },
+      // showYAxis2: {
+      //   type: "boolean",
+      //   label: "Show Y Axis Right Side Label",
+      //   default: false,
+      //   order: 14,
+      //   section: "Y-Axis",
+      // },
+      //
+      // yAxisRightDropdown: {
+      //   type: "string",
+      //   label: "Choose Y Axis Right Side Label",
+      //   display: "select",
+      //   placeholder: "Please Select",
+      //   values: fieldOptions2,
+      //   order: 15,
+      //   default:'',
+      //   section: "Y-Axis",
+      // },
 
 
            //

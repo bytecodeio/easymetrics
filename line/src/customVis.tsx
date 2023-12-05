@@ -190,17 +190,17 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
               order: 16,
               section: "Y-Axis",
             },
-
-            yAxisRightValues: {
-              type: "string",
-              label: "Choose Y Axis Right Side Value",
-              display: "select",
-              placeholder: "Please Select",
-              values: fieldOptions,
-              order: 17,
-              default:'',
-              section: "Y-Axis",
-            },
+            // 
+            // yAxisRightValues: {
+            //   type: "string",
+            //   label: "Choose Y Axis Right Side Value",
+            //   display: "select",
+            //   placeholder: "Please Select",
+            //   values: fieldOptions,
+            //   order: 17,
+            //   default:'',
+            //   section: "Y-Axis",
+            // },
 
             isYAxisCurrency2: {
               type: "boolean",
