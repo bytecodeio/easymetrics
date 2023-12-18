@@ -121,14 +121,11 @@ function BarLineVis({
     showYAxis2Value,
     yAxisRightValues,
     isYAxisCurrency2,
-    choosePoints
+    choosePoints,
+    yAxisLeftValues,
+    color_range,
+    removeSecond
   } = config;
-
-
-
-
-
-
 
   // Chart type toggle
   interface ChartTypeOption {
@@ -176,51 +173,54 @@ function BarLineVis({
   const dimensionLabel = fields.dimensionsLabel[0];
   const measureLabel = fields.measuresLabel[0];
 
+  const dimensionName2 = fields.dimensions[1];
+  const measureName2 = fields.measures[1];
 
-const [firstData = {}] = data;
-let cols_to_hide = [];
 
-for (const [key, value] of Object.entries(firstData)) {
-  if (key.split(".")[1] === "currency_number_format") {
-    cols_to_hide = firstData[key].value.split(",").map((e) => e.trim());
+  console.log(fields)
 
+  console.log(measureName2,  "measure2")
+
+
+  const [firstData = {}] = data;
+  let cols_to_hide = [];
+
+  for (const [key, value] of Object.entries(firstData)) {
+    if (key.split(".")[1] === "currency_number_format") {
+      cols_to_hide = firstData[key].value.split(",").map((e) => e.trim());
+
+    }
   }
-}
 
-console.log(firstData)
 
-let points = [];
+  let points = [];
 
-for (const [key, value] of Object.entries(firstData)) {
-  if (key.split(".")[1] === "points_sized_by") {
-    points = firstData[key].value.split(",").map((e) => e.trim());
+  for (const [key, value] of Object.entries(firstData)) {
+    if (key.split(".")[1] === "points_sized_by") {
+      points = firstData[key].value.split(",").map((e) => e.trim());
 
+    }
   }
-}
-let points = points.toString()
+  let points = points.toString()
 
 
 
-// let elem = document.getElementById("vis-wrapper");
-//
-// let isMainPresent = elem.classList.contains("hidePoints");
-//
-// if (isMainPresent === true){
-//   console.log("sfkbsfbksbksdbksbdvkbbs")
-// }
+  // let elem = document.getElementById("vis-wrapper");
+  //
+  // let isMainPresent = elem.classList.contains("hidePoints");
+  //
+  // if (isMainPresent === true){
+  // }
 
-// var word = measureName.split(".")[1]
-//
-//
-// var word = word.replace(/_/g, ' ').replace(/(?: |\b)(\w)/g, function(word) { return word.toUpperCase()});
-//
-// console.log(word)
+  // var word = measureName.split(".")[1]
+  //
+  //
+  // var word = word.replace(/_/g, ' ').replace(/(?: |\b)(\w)/g, function(word) { return word.toUpperCase()});
+  //
 
-// console.log(firstData, "one")
-// console.log(cols_to_hide, "two")
 
-// let text = cols_to_hide.toString().slice(0, -1);
-let text = cols_to_hide.toString()
+  // let text = cols_to_hide.toString().slice(0, -1);
+  let text = cols_to_hide.toString()
 
 
   const labels = data.map(
@@ -228,34 +228,33 @@ let text = cols_to_hide.toString()
   );
 
 
-console.log(text)
   // const colors = ["#6253DA", "#D0D9E1", "#6CBFEF", "#A3D982", "#E192ED"];
-  const colors = [
-    '1A73E8',
-    '12B5CB',
-    'E52592',
-    '9334E6',
-    '079c98',
-    'E8710A',
-    'F9AB00',
-    '7CB342',
-    'EA4335',
-    'FF8168',
-    '1A73E8',
-    '12B5CB',
-    'E52592',
-    '9334E6',
-    '079c98',
-    'E8710A',
-    'F9AB00',
-    '7CB342',
-    'EA4335',
-    'FF8168',
-  ];
+  // const colors = [
+  //   '1A73E8',
+  //   '12B5CB',
+  //   'E52592',
+  //   '9334E6',
+  //   '079c98',
+  //   'E8710A',
+  //   'F9AB00',
+  //   '7CB342',
+  //   'EA4335',
+  //   'FF8168',
+  //   '1A73E8',
+  //   '12B5CB',
+  //   'E52592',
+  //   '9334E6',
+  //   '079c98',
+  //   'E8710A',
+  //   'F9AB00',
+  //   '7CB342',
+  //   'EA4335',
+  //   'FF8168',
+  // ];
 
+  const colors = config.color_range
 
-
-
+  console.log(color_range)
 
   const hasPivot = !!fields.pivots && fields.pivots.length > 0;
 
@@ -282,22 +281,31 @@ console.log(text)
   };
   const [chartData, setChartData] = useState(defaultChartData);
 
-  function createGradient(
-    ctx: CanvasRenderingContext2D,
-    startColor: string,
-    endColor: string
-  ): CanvasGradient {
-    const gradientFill = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-    gradientFill.addColorStop(0, startColor);
-    gradientFill.addColorStop(1, endColor);
-    return gradientFill;
-  }
+  // function createGradient(
+  //   ctx: CanvasRenderingContext2D,
+  //   startColor: string,
+  //   endColor: string
+  // ): CanvasGradient {
+  //   const gradientFill = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+  //   gradientFill.addColorStop(0, startColor);
+  //   gradientFill.addColorStop(1, endColor);
+  //   return gradientFill;
+  // }
 
   function updateChartData(chartType: ChartType) {
     let datasets = [];
     let canvasElement = document.getElementById("chart") as HTMLCanvasElement;
     if (canvasElement) {
       const ctx = canvasElement.getContext("2d");
+
+
+
+// const vals = Object.keys(data[0][yAxisRightValues[0]]);
+// vals.forEach((pivotValue, i) => {
+//   const columnData = data.map((row) => row[measures[0]][pivotValue].value);
+// console.log(vals)
+//
+// })
 
 
       if (hasPivot) {
@@ -308,61 +316,96 @@ console.log(text)
             (row) => row[measureName][pivotValue].value
           );
 
-          const gradientFill = createGradient(
-            ctx,
-            `#${colors[i]}`,
-            `#${colors[i]}00`
-          );
+          // const gradientFill = createGradient(
+          //   ctx,
+          //   `#${colors[i]}`,
+          //   `#${colors[i]}00`
+          // );
+
+          console.log(colors, "hi")
 
           datasets.push({
 
             type: chartType,
             label: pivotValue,
             backgroundColor:
-              chartType === "line" ? gradientFill : `#${colors[i]}`,
+              chartType === "line" ? `#${colors[i]}` : `#${colors[i]}`,
             borderColor: `#${colors[i]}`,
             pointBackgroundColor: `#${colors[i]}`,
             data: columnData,
             yAxisID: "yLeft",
-            yAxisID: "yRight",
+
             fill,
           });
 
 
         });
       }
-      else {
-        const gradientFill = createGradient(
-          ctx,
-          `#${colors[0]}`,
-          `#${colors[0]}00`
-        );
 
 
-        datasets.push(
-          {
-          type: chartType,
-          label: measureLabel,
-          backgroundColor:
-            chartType === "line" ? gradientFill : `#${colors[0]}`,
-          borderColor: `#${colors[0]}`,
-          pointBackgroundColor: `#${colors[0]}`,
-          data: data.map((row) => row[measureName].value),
-          yAxisID: "yRight",
-          fill,
-        },
-        {
+  else if (removeSecond) {
+
+
+    datasets.push(
+
+      {
         type: chartType,
-        label: measureLabel,
+        label: yAxisDropdown,
         backgroundColor:
-          chartType === "line" ? gradientFill : `#${colors[0]}`,
-        borderColor: `#${colors[0]}`,
-        pointBackgroundColor: `#${colors[0]}`,
-        data: data.map((row) => row[measureName].value),
+          chartType === "line" ? `#${colors[1]}` : `#${colors[0]}`,
+        borderColor: `${color_range ? colors[0] : colors[0]}`,
+        pointBackgroundColor: `${color_range ? colors[0] : colors[0]}`,
+        // data: data.map((row) => row[measureName].value),
+        data: yAxisLeftValues ? yAxisLeftValues.split(",") : data.map((row) => row[measureName].value),
         yAxisID: "yLeft",
         fill,
       }
-      );
+    );
+
+
+
+  }
+
+      else {
+
+        datasets.push(
+
+          {
+            type: 'line',
+
+            label: yAxisRightDropdown,
+            backgroundColor:
+              chartType === "line" ? `#${colors[1]}` : `#${colors[1]}`,
+              borderColor: `${color_range ? colors[1] : colors[1]}`,
+              pointBackgroundColor: `${color_range ? colors[1] : colors[1]}`,
+            // data: yAxisRightValues,
+            // data: [99, 56, 34, 15, 67, 88, 89],
+            //
+            // data: data.map((row) => row[yAxisRightValues]),
+            data: yAxisRightValues ? yAxisRightValues.split(",") : data.map((row) => row[measureName].value),
+            yAxisID: "yRight",
+            fill,
+          },
+
+          {
+            type: chartType,
+            label: yAxisDropdown,
+            backgroundColor:
+              chartType === "line" ? `#${colors[1]}` : `#${colors[0]}`,
+            borderColor: `${color_range ? colors[0] : colors[0]}`,
+            pointBackgroundColor: `${color_range ? colors[0] : colors[0]}`,
+            // data: data.map((row) => row[measureName].value),
+            data: yAxisLeftValues ? yAxisLeftValues.split(",") : data.map((row) => row[measureName].value),
+            yAxisID: "yLeft",
+            fill,
+          }
+        );
+
+
+
+
+
+
       }
       setChartData({ labels, datasets });
     }
@@ -400,8 +443,6 @@ console.log(text)
       const position = context.chart.canvas.getBoundingClientRect();
 
 
-      //
-      // console.log(context.tooltip.dataPoints[0].formattedValue, "elizabetusvfuswvuye")
 
       const { dataIndex } = context.tooltip.dataPoints[0];
 
@@ -410,7 +451,7 @@ console.log(text)
 
 
       let rows: TooltipRow[] = [];
-      if (showAllValuesInTooltip ) {
+      if (showAllValuesInTooltip) {
         Object.entries(lookerRow[measureName]).forEach(
 
           ([pivotName, { value: currentPeriodValue }], i) => {
@@ -432,9 +473,8 @@ console.log(text)
             rows.push({
               hasPreviousPeriod,
 
-              measureValue: `${
-                isYAxisCurrency ? "$" : ""
-              }${currentPeriodValue}`,
+              measureValue: `${isYAxisCurrency ? "$" : ""
+                }${currentPeriodValue}`,
 
 
               periodComparisonValue,
@@ -468,9 +508,8 @@ console.log(text)
         rows = [
           {
             hasPreviousPeriod,
-            measureValue: `${isYAxisCurrency ? "$" : ""}${
-              context.tooltip.dataPoints[0].formattedValue
-            }`,
+            measureValue: `${isYAxisCurrency ? "$" : ""}${context.tooltip.dataPoints[0].formattedValue
+              }`,
 
 
             periodComparisonValue,
@@ -482,9 +521,9 @@ console.log(text)
       }
 
       setTooltip({
-        dimensionLabel0: `${dimensionLabel}:`,
+        dimensionLabel0: `${xAxisDropdownValues}:`,
         dimensionLabel: `${context.tooltip.title[0]}`,
-        measureLabel: `${context.tooltip.dataPoints[0].dataset.label}: `,
+        measureLabel: `${yAxisDropdownValues}: `,
         measureLabel0: `${context.tooltip.dataPoints[0].formattedValue}`,
         left:
           position.left + window.pageXOffset + context.tooltip.caretX + "px",
@@ -505,52 +544,62 @@ console.log(text)
 
 
 
+console.log(xAxisDropdown)
+
+  const Content = config.xAxisDropdown.split(",").map((d, i) => ({
+    xAxisDropdown: d,
+    yAxisDropdown: config.yAxisDropdown.split(",")[i],
+    yAxisLeftValues:config.yAxisLeftValues.split(",")[i],
+    symbol: config.symbol.split(",")[i],
+    yAxisRightDropdown: config.yAxisRightDropdown.split(",")[i],
+    yAxisRightValues: config.yAxisRightValues.split(",")[i],
+    symbol2: config.symbol2.split(",")[i],
+
+  }))
+
+console.log(xAxisDropdown)
 
 
-      const Content = config.xAxisDropdown.split(",").map((d, i) => ({
-      xAxisDropdown: d,
-      yAxisDropdown:config.yAxisDropdown.split(",")[i],
-      symbol:config.symbol.split(",")[i],
-      yAxisRightDropdown:config.yAxisRightDropdown.split(",")[i],
-      // yAxisRightValues:config.yAxisRightValues.split(",")[i],
-      symbol2:config.symbol2.split(",")[i],
+  let result = Content.map(function (val, i) { return val.symbol });
 
-      }))
-
-//
-// const first = xAxisDropdown.length > 0;
-// const second = yAxisDropdown.length > 0;
-// const third = duration.length > 0;
-// const fourth = variance.length > 0;
-// const fifth = progress.length > 0;
-// // const sixth = autonomous.length > 0;
-// // const seventh = manual.length > 0;
-// // const eighth = none.length > 0;
-
-
-let result = Content.map(function(val, i){ return val.symbol });
-
-let theSymbol = result[0]
+  let theSymbol = result[0]
 
 
 
-let result2 = Content.map(function(val, i){ return val.symbol2 });
+  let result2 = Content.map(function (val, i) { return val.symbol2 })
 
-let theSymbol2 = result2[0]
+  let theSymbol2 = result2[0]
 
-let xAxisDropdownValues = Content.map(function(val, i){ return val.xAxisDropdown });
-
-
-let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown });
+  let xAxisDropdownValues = Content.map(function (val, i) { return val.xAxisDropdown })
 
 
-
-let yAxisRightDropdownValues = Content.map(function(val, i){ return val.yAxisRightDropdown });
-
-// let yAxisRightValues = Content.map(function(val, i){ return val.yAxisRightValues });
+  let yAxisDropdownValues = Content.map(function (val, i) { return val.yAxisDropdown })
 
 
 
+  let yAxisRightDropdownValues = Content.map(function (val, i) { return val.yAxisRightDropdown })
+
+  // let yAxisRightValues = Content.map(function (val, i) { return val.yAxisRightValues })
+
+
+
+
+  const ranges3 = [
+    { divider: 1e9, suffix: "b" },
+    { divider: 1e6, suffix: "m" },
+    { divider: 1e3, suffix: "k" },
+  ];
+
+function formatNumber3(n: number) {
+    for (let i = 0; i < ranges3.length; i++) {
+      const { divider, suffix } = ranges3[i];
+      if (n >= divider) {
+        return `${n / divider}${suffix}`;
+      }
+    }
+    return n.toString();
+    // console.log(n.toString())
+  }
 
 
   const chartOptions: ChartOptions<"scatter" | "bar"> = useMemo(
@@ -558,7 +607,7 @@ let yAxisRightDropdownValues = Content.map(function(val, i){ return val.yAxisRig
       layout: {
         padding: {
           top: 15,
-          left:10,
+          left: 10,
         },
       },
 
@@ -571,15 +620,15 @@ let yAxisRightDropdownValues = Content.map(function(val, i){ return val.yAxisRig
 
         if (hasPivot) {
 
-        const measureLinks = Object.values(data[dataIndex][measureName])[datasetIndex].links ?? [];
-        const dimensionLinks = (data[dataIndex][dimensionName].links as Link[]) ?? [];
+          const measureLinks = Object.values(data[dataIndex][measureName])[datasetIndex].links ?? [];
+          const dimensionLinks = (data[dataIndex][dimensionName].links as Link[]) ?? [];
 
-      }
-      else{
-        const measureLinks = data[dataIndex][measureName].links ?? [];
+        }
+        else {
+          const measureLinks = data[dataIndex][measureName].links ?? [];
 
-        const dimensionLinks = (data[dataIndex][dimensionName].links) ?? [];
-      }
+          const dimensionLinks = (data[dataIndex][dimensionName].links) ?? [];
+        }
 
         lookerCharts.Utils.openDrillMenu({
           links: [...measureLinks, ...dimensionLinks],
@@ -590,17 +639,17 @@ let yAxisRightDropdownValues = Content.map(function(val, i){ return val.yAxisRig
         legend: {
           position: "bottom",
           labels: {
-            color:'#262D33',
+            color: '#262D33',
             font: {
               size: 12,
               weight: '500',
               family: "Roboto"
 
             },
-          usePointStyle: true
-         },
-        align: "center" as const,
-        display: hasNoPivot || hasPivot,
+            usePointStyle: true
+          },
+          align: "center" as const,
+          display: hasNoPivot || hasPivot,
         },
         tooltip: {
           enabled: false,
@@ -618,7 +667,7 @@ let yAxisRightDropdownValues = Content.map(function(val, i){ return val.yAxisRig
           stacked: isStacked,
           title: {
             display: showXAxisLabel,
-            text: ` ${xAxisDropdown ?  xAxisDropdownValues  : dimensionLabel }`,
+            text: ` ${xAxisDropdown ? xAxisDropdownValues : dimensionLabel}`,
             font: {
               size: 14
             }
@@ -632,14 +681,14 @@ let yAxisRightDropdownValues = Content.map(function(val, i){ return val.yAxisRig
           position: "left" as const,
           stacked: isStacked,
           ticks: {
-            display:isYAxisCurrency,
+            // display: isYAxisCurrency,
             callback: function (value: number) {
-              return `${symbol ? theSymbol : text}${formatNumber(value)}`;
+              return `${symbol ? theSymbol : text}${formatNumber3(value)}`;
             },
           },
           title: {
             display: showYAxisLabel,
-            text: `${yAxisDropdown ?  yAxisDropdownValues  : measureLabel }`,
+            text: `${yAxisDropdown ? yAxisDropdownValues : measureLabel}`,
             font: {
               size: 14
             }
@@ -652,14 +701,10 @@ let yAxisRightDropdownValues = Content.map(function(val, i){ return val.yAxisRig
             display: false,
           },
           position: "right" as const,
-           display: true,
+          display: true,
           ticks: {
 
-
-
             display: showYAxis2Value,
-
-
 
             callback: function (value: number) {
               return `${symbol2 ? theSymbol2 : text}${formatNumber(value)}`;
@@ -667,7 +712,7 @@ let yAxisRightDropdownValues = Content.map(function(val, i){ return val.yAxisRig
           },
           title: {
             display: showYAxis2,
-            text: `${yAxisRightDropdown ?  yAxisRightDropdownValues  : measureLabel }`,
+            text: `${yAxisRightDropdown ? yAxisRightDropdownValues : measureLabel}`,
             font: {
               size: 14
             }
@@ -707,20 +752,20 @@ let yAxisRightDropdownValues = Content.map(function(val, i){ return val.yAxisRig
 
   return (
     <div id="vis-wrapper" className={`${config.showPoints ? "points hidePoints" : "points"}`}>
-    <div id="across">
-    <div id="title-kpi-wrapper">
+      <div id="across">
+        <div id="title-kpi-wrapper">
 
 
-      <div id="title">{title}</div>
-      {/*{showKpi && (
+          <div id="title">{title}</div>
+          {/*{showKpi && (
         <div id="kpi">
           {kpiValue.toLocaleString()} {kpiUnit}
         </div>
       )}*/}
-    </div>
-      <div id="header">
+        </div>
+        <div id="header">
 
-        <div id="controls">
+          <div id="controls">
             {/*<ButtonGroup size="sm">
             {chartTypeOptions.map((chartTypeOption) => (
               <Button
@@ -747,9 +792,9 @@ let yAxisRightDropdownValues = Content.map(function(val, i){ return val.yAxisRig
                 </Button>
               ))}
             </ButtonGroup> */}
+          </div>
         </div>
       </div>
-</div>
 
       <div id="chart-wrapper">
         <Chart

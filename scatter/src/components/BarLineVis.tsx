@@ -121,7 +121,8 @@ function BarLineVis({
     showYAxis2Value,
     yAxisRightValues,
     isYAxisCurrency2,
-    choosePoints
+    choosePoints,
+    color_range,
   } = config;
 
 
@@ -229,32 +230,7 @@ let text = cols_to_hide.toString()
 
 
 console.log(text)
-  // const colors = ["#6253DA", "#D0D9E1", "#6CBFEF", "#A3D982", "#E192ED"];
-  const colors = [
-    '1A73E8',
-    '12B5CB',
-    'E52592',
-    '9334E6',
-    '079c98',
-    'E8710A',
-    'F9AB00',
-    '7CB342',
-    'EA4335',
-    'FF8168',
-    '1A73E8',
-    '12B5CB',
-    'E52592',
-    '9334E6',
-    '079c98',
-    'E8710A',
-    'F9AB00',
-    '7CB342',
-    'EA4335',
-    'FF8168',
-  ];
-
-
-
+  const colors = config.color_range
 
 
   const hasPivot = !!fields.pivots && fields.pivots.length > 0;
@@ -282,16 +258,16 @@ console.log(text)
   };
   const [chartData, setChartData] = useState(defaultChartData);
 
-  function createGradient(
-    ctx: CanvasRenderingContext2D,
-    startColor: string,
-    endColor: string
-  ): CanvasGradient {
-    const gradientFill = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-    gradientFill.addColorStop(0, startColor);
-    gradientFill.addColorStop(1, endColor);
-    return gradientFill;
-  }
+  // function createGradient(
+  //   ctx: CanvasRenderingContext2D,
+  //   startColor: string,
+  //   endColor: string
+  // ): CanvasGradient {
+  //   const gradientFill = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+  //   gradientFill.addColorStop(0, startColor);
+  //   gradientFill.addColorStop(1, endColor);
+  //   return gradientFill;
+  // }
 
   function updateChartData(chartType: ChartType) {
     let datasets = [];
@@ -308,20 +284,19 @@ console.log(text)
             (row) => row[measureName][pivotValue].value
           );
 
-          const gradientFill = createGradient(
-            ctx,
-            `#${colors[i]}`,
-            `#${colors[i]}00`
-          );
+          // const gradientFill = createGradient(
+          //   ctx,
+          //   `#${colors[i]}`,
+          //   `#${colors[i]}00`
+          // );
 
           datasets.push({
 
             type: chartType,
             label: pivotValue,
-            backgroundColor:
-              chartType === "line" ? gradientFill : `#${colors[i]}`,
-            borderColor: `#${colors[i]}`,
-            pointBackgroundColor: `#${colors[i]}`,
+            backgroundColor:`${color_range ? colors[i] : colors[i]}`,
+            borderColor: `${color_range ? colors[0] : colors[0]}`,
+            pointBackgroundColor: `${color_range ? colors[0] : colors[0]}`,
             data: columnData,
             yAxisID: "yLeft",
             yAxisID: "yRight",
@@ -332,25 +307,27 @@ console.log(text)
         });
       }
       else {
-        const gradientFill = createGradient(
-          ctx,
-          `#${colors[0]}`,
-          `#${colors[0]}00`
-        );
+        // const gradientFill = createGradient(
+        //   ctx,
+        //   `#${colors[0]}`,
+        //   `#${colors[0]}00`
+        // );
 
 
         datasets.push({
           type: chartType,
           label: measureLabel,
-          backgroundColor:
-            chartType === "line" ? gradientFill : `#${colors[0]}`,
-          borderColor: `#${colors[0]}`,
-          pointBackgroundColor: `#${colors[0]}`,
-          data: data.map((row) => row[measureName].value),
-          yAxisID: "yLeft",
-          fill,
+          backgroundColor:`${color_range ? colors[0] : colors[0]}`,
+          borderColor: `${color_range ? colors[0] : colors[0]}`,
+          pointBackgroundColor: `${color_range ? colors[0] : colors[0]}`,
+          // data: yAxisLeftValues ? yAxisLeftValues.split(",") : data.map((row) => row[measureName].value),
+
+          data: data.map((row, i) => ({x: i, y: row[measureName].value})),
+          // yAxisID: "yLeft",
+          // fill,
         });
       }
+      // console.log('datasets', datasets, data, measureName, dimensionName);
       setChartData({ labels, datasets });
     }
   }
@@ -469,9 +446,9 @@ console.log(text)
       }
 
       setTooltip({
-        dimensionLabel0: `${dimensionLabel}:`,
+        dimensionLabel0: `${xAxisDropdownValues}:`,
         dimensionLabel: `${context.tooltip.title[0]}`,
-        measureLabel: `${context.tooltip.dataPoints[0].dataset.label}: `,
+        measureLabel: `${yAxisDropdownValues}: `,
         measureLabel0: `${context.tooltip.dataPoints[0].formattedValue}`,
         left:
           position.left + window.pageXOffset + context.tooltip.caretX + "px",
@@ -503,16 +480,6 @@ console.log(text)
       // symbol2:config.symbol2.split(",")[i],
 
       }))
-
-//
-// const first = xAxisDropdown.length > 0;
-// const second = yAxisDropdown.length > 0;
-// const third = duration.length > 0;
-// const fourth = variance.length > 0;
-// const fifth = progress.length > 0;
-// // const sixth = autonomous.length > 0;
-// // const seventh = manual.length > 0;
-// // const eighth = none.length > 0;
 
 
 let result = Content.map(function(val, i){ return val.symbol });
@@ -610,9 +577,27 @@ let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown
               size: 14
             }
           },
-        },
+          ticks: {
+            callback: function (value: number) {
+              return value > 1 ? data[value === data.length ? data.length - 1 : value][dimensionName].value : data[value * 10][dimensionName].value;
+              // return value;
 
-        yLeft: {
+            },
+          },
+        },
+        // xAxes: [{
+        //   ticks: {
+        //       callback: function(value) {
+        //           // for a value (tick) equals to 8
+        //           console.log('datasets-c', data, value, dimensionName)
+        //           return data[value][dimensionName].value;
+        //           // 'junior-dev' will be returned instead and displayed on your chart
+        //       }
+        //   }
+        // }],
+
+        y: {
+          beginAtZero: true,
           grid: {
             display: showYGridLines,
           },
@@ -621,6 +606,7 @@ let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown
           ticks: {
             display:isYAxisCurrency,
             callback: function (value: number) {
+              // console.log('y-ticks', `${symbol ? theSymbol : text}`, symbol, theSymbol)
               return `${symbol ? theSymbol : text}${formatNumber(value)}`;
             },
           },

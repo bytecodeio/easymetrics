@@ -16,14 +16,14 @@ export function formatNumber(n: number) {
 }
 
 
-
-export function formatNumber2(n: number) {
-  for (let i = 0; i < ranges.length; i++) {
-    const { divider, suffix } = ranges[i];
-    if (n >= divider) {
-      return `${n / divider}${suffix}`;
-    }
-  }
-  return (n.toString() * 1000);
-
-}
+//
+// export function formatNumber2(n: number) {
+//   for (let i = 0; i < ranges.length; i++) {
+//     const { divider, suffix } = ranges[i];
+//     if (n >= divider) {
+//       return `${n / divider}${suffix}`;
+//     }
+//   }
+//   return (n.toString() * 1000);
+//
+// }

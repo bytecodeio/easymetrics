@@ -26,7 +26,6 @@ looker.plugins.visualizations.add({
   updateAsync: function (data, element, config, queryResponse, details, done) {
 
 
-
     const { dimension_like: dimensionLike } = queryResponse.fields;
 
     const dimensions1 = dimensionLike.map((dimension) => ({
@@ -62,7 +61,24 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
   }));
 
 
+  console.log(fieldOptions2, "all labels")
+
+
+
     const lookerVis = this;
+
+
+
+      function preloader(){
+          // lookerVis.trigger("registerOptions", configOptions);
+      // lookerVis.trigger("updateConfig", [{   yAxisDropdown: fieldOptions2 }]);
+
+      // lookerVis.trigger("updateConfig", [{ showXGridLines: true }]);
+    }//preloader
+
+    //remove/comment this one to check the website in loading state
+    window.onload = preloader;
+
 
     // config
     const configOptions: ConfigOptions = {
@@ -124,13 +140,13 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
       //   order: 7,
       // },
 
-      isYAxisCurrency: {
-        type: "boolean",
-        label: "Format Y Axis as Currency and Show",
-        default: true,
-        order: 10,
-        section: "Y-Axis",
-      },
+      // isYAxisCurrency: {
+      //   type: "boolean",
+      //   label: "Format Y Axis as Currency and Show",
+      //   default: true,
+      //   order: 10,
+      //   section: "Y-Axis",
+      // },
 
 
            symbol: {
@@ -139,7 +155,7 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
             display: "select",
             placeholder: "Please Select",
             values: fieldOptions,
-            order: 11,
+            order: 26,
             default:'',
             section: "Y-Axis",
           },
@@ -169,7 +185,7 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
       //   order: 14,
       //   section: "Y-Axis",
       // },
-      //
+
       // yAxisRightDropdown: {
       //   type: "string",
       //   label: "Choose Y Axis Right Side Label",
@@ -264,7 +280,27 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         order: 23,
           section: "Style",
       },
+      color_range: {
+        type: 'array',
+        label: 'Color Range',
+        display: 'colors',
+        default: ['#dd3333', '#80ce5d', '#f78131', '#369dc1', '#c572d3', '#36c1b3', '#b57052', '#ed69af'],
+        order: 24,
+        section: "Style",
+      },
+      yAxisLeftValues: {
+        type: "string",
+        label: "Choose Y Axis Left Side Value",
+        display: "select",
+        placeholder: "Please Select",
+        values: fieldOptions,
+        order: 25,
+        default:'',
+        section: "Y-Axis",
+      },
     };
+
+
 
 
     lookerVis.trigger("registerOptions", configOptions);
@@ -278,6 +314,9 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         validatedConfig[configKey] = configOptions[configKey].default;
       }
     }
+
+  console.log(configKeys, "configKeys")
+  console.log(validatedConfig, "validatedConfig")
 
     // get dimensions and measures
     const { dimension_like, measure_like, pivots } = queryResponse.fields;
@@ -303,6 +342,7 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         fields={fields}
         config={validatedConfig}
         lookerCharts={LookerCharts}
+        lookerVis={lookerVis}
       />
     );
 

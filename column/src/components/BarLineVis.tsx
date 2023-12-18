@@ -61,6 +61,8 @@ interface BarLineVisProps {
   config: VisConfig;
   lookerCharts: LookerChartUtils;
   lookerVis?: any;
+  configOptions: configOptions
+
 }
 
 const chartPlugins = [
@@ -92,7 +94,9 @@ function BarLineVis({
   data,
   fields,
   config,
-  lookerCharts
+  lookerCharts,
+  lookerVis,
+   configOptions
 }: BarLineVisProps): JSX.Element {
 
 
@@ -121,14 +125,19 @@ function BarLineVis({
     showYAxis2Value,
     yAxisRightValues,
     isYAxisCurrency2,
-    choosePoints
+    choosePoints,
+    color_range,
+    yAxisLeftValues
   } = config;
 
 
 
+console.log(lookerVis)
+  // lookerVis.trigger("updateConfig", [{ yAxisDropdown: yAxisDropdownValues}]);
 
+  // lookerVis.trigger("registerOptions", configOptions);
 
-
+  // lookerVis.trigger("updateConfig", [{ showXGridLines: true }]);
 
   // Chart type toggle
   interface ChartTypeOption {
@@ -187,7 +196,7 @@ for (const [key, value] of Object.entries(firstData)) {
   }
 }
 
-console.log(firstData)
+// console.log(firstData)
 
 let points = [];
 
@@ -228,33 +237,8 @@ let text = cols_to_hide.toString()
   );
 
 
-console.log(text)
-  // const colors = ["#6253DA", "#D0D9E1", "#6CBFEF", "#A3D982", "#E192ED"];
-  const colors = [
-    '1A73E8',
-    '12B5CB',
-    'E52592',
-    '9334E6',
-    '079c98',
-    'E8710A',
-    'F9AB00',
-    '7CB342',
-    'EA4335',
-    'FF8168',
-    '1A73E8',
-    '12B5CB',
-    'E52592',
-    '9334E6',
-    '079c98',
-    'E8710A',
-    'F9AB00',
-    '7CB342',
-    'EA4335',
-    'FF8168',
-  ];
 
-
-
+  const colors = config.color_range
 
 
   const hasPivot = !!fields.pivots && fields.pivots.length > 0;
@@ -282,16 +266,16 @@ console.log(text)
   };
   const [chartData, setChartData] = useState(defaultChartData);
 
-  function createGradient(
-    ctx: CanvasRenderingContext2D,
-    startColor: string,
-    endColor: string
-  ): CanvasGradient {
-    const gradientFill = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-    gradientFill.addColorStop(0, startColor);
-    gradientFill.addColorStop(1, endColor);
-    return gradientFill;
-  }
+  // function createGradient(
+  //   ctx: CanvasRenderingContext2D,
+  //   startColor: string,
+  //   endColor: string
+  // ): CanvasGradient {
+  //   const gradientFill = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+  //   gradientFill.addColorStop(0, startColor);
+  //   gradientFill.addColorStop(1, endColor);
+  //   return gradientFill;
+  // }
 
   function updateChartData(chartType: ChartType) {
     let datasets = [];
@@ -308,20 +292,24 @@ console.log(text)
             (row) => row[measureName][pivotValue].value
           );
 
-          const gradientFill = createGradient(
-            ctx,
-            `#${colors[i]}`,
-            `#${colors[i]}00`
-          );
+          // const gradientFill = createGradient(
+          //   ctx,
+          //   `#${colors[i]}`,
+          //   `#${colors[i]}00`
+          // );
 
           datasets.push({
-
+            datalabels: {
+             color:  `${color_range ? colors[i] : colors[i]}`,
+             fontWeight:'600'
+           },
+            labels:pivotValues,
             type: chartType,
             label: pivotValue,
-            backgroundColor:
-              chartType === "line" ? gradientFill : `#${colors[i]}`,
-            borderColor: `#${colors[i]}`,
-            pointBackgroundColor: `#${colors[i]}`,
+            // barThickness: 75,
+            backgroundColor:`${color_range ? colors[i] : colors[i]}`,
+            borderColor: `${color_range ? colors[0] : colors[0]}`,
+            pointBackgroundColor: `${color_range ? colors[0] : colors[0]}`,
             data: columnData,
             yAxisID: "yLeft",
             yAxisID: "yRight",
@@ -332,21 +320,21 @@ console.log(text)
         });
       }
       else {
-        const gradientFill = createGradient(
-          ctx,
-          `#${colors[0]}`,
-          `#${colors[0]}00`
-        );
+        // const gradientFill = createGradient(
+        //   ctx,
+        //   `#${colors[0]}`,
+        //   `#${colors[0]}00`
+        // );
 
 
         datasets.push({
           type: chartType,
           label: measureLabel,
-          backgroundColor:
-            chartType === "line" ? gradientFill : `#${colors[0]}`,
-          borderColor: `#${colors[0]}`,
-          pointBackgroundColor: `#${colors[0]}`,
-          data: data.map((row) => row[measureName].value),
+          backgroundColor:`${color_range ? colors[0] : colors[0]}`,
+          borderColor: `${color_range ? colors[0] : colors[0]}`,
+          pointBackgroundColor: `${color_range ? colors[0] : colors[0]}`,
+          // data: data.map((row) => row[measureName].value),
+          data: yAxisLeftValues ? yAxisLeftValues.split(",") : data.map((row) => row[measureName].value),
           yAxisID: "yLeft",
           fill,
         });
@@ -442,6 +430,7 @@ console.log(text)
         const pivotValue = context.tooltip.dataPoints[0].dataset.label;
 
 
+
         const previousPeriodValue =
           data[dataIndex][periodComparisonMeasure][pivotValue].value;
         const currentPeriodValue = context.tooltip.dataPoints[0].raw as number;
@@ -469,9 +458,9 @@ console.log(text)
       }
 
       setTooltip({
-        dimensionLabel0: `${dimensionLabel}:`,
+        dimensionLabel0: `${xAxisDropdownValues}:`,
         dimensionLabel: `${context.tooltip.title[0]}`,
-        measureLabel: `${context.tooltip.dataPoints[0].dataset.label}: `,
+        measureLabel: `${yAxisDropdownValues}: `,
         measureLabel0: `${context.tooltip.dataPoints[0].formattedValue}`,
         left:
           position.left + window.pageXOffset + context.tooltip.caretX + "px",
@@ -498,21 +487,12 @@ console.log(text)
       xAxisDropdown: d,
       yAxisDropdown:config.yAxisDropdown.split(",")[i],
       symbol:config.symbol.split(",")[i],
+      yAxisLeftValues:config.yAxisLeftValues.split(",")[i],
       // yAxisRightDropdown:config.yAxisRightDropdown.split(",")[i],
       // yAxisRightValues:config.yAxisRightValues.split(",")[i],
       // symbol2:config.symbol2.split(",")[i],
 
       }))
-
-//
-// const first = xAxisDropdown.length > 0;
-// const second = yAxisDropdown.length > 0;
-// const third = duration.length > 0;
-// const fourth = variance.length > 0;
-// const fifth = progress.length > 0;
-// // const sixth = autonomous.length > 0;
-// // const seventh = manual.length > 0;
-// // const eighth = none.length > 0;
 
 
 let result = Content.map(function(val, i){ return val.symbol });
@@ -539,6 +519,11 @@ let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown
 //
 
 
+// vis.trigger("updateConfig", [{ yAxisDropdownValues: yAxisDropdownValues }]);
+
+
+
+console.log(yAxisDropdownValues, "this is the picked label from config")
 
   const chartOptions: ChartOptions<"scatter" | "bar"> = useMemo(
     () => ({
@@ -743,6 +728,7 @@ let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown
           options={chartOptions}
           id="chart"
           plugins={chartPlugins}
+          lookerVis={lookerVis}
         />
         {tooltip && <Tooltip hasPivot={hasPivot} hasNoPivot={hasNoPivot} tooltipData={tooltip} />}
       </div>

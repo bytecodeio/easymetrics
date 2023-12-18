@@ -27,16 +27,15 @@ looker.plugins.visualizations.add({
 
 
 
+console.log(queryResponse, "this is all data")
+
     const { dimension_like: dimensionLike } = queryResponse.fields;
 
     const dimensions1 = dimensionLike.map((dimension) => ({
        label: dimension.label_short ?? dimension.label,
        name: dimension.name
 
-
      }));
-
-
 
      const { measure_like: measureLike } = queryResponse.fields;
 
@@ -47,11 +46,12 @@ looker.plugins.visualizations.add({
      }));
 
 
-
-
      const fieldOptions = [...dimensions1, ...measures1].map((dim) => ({
          [dim.label]: queryResponse.data.map(row => row[dim.name].value).join(",")
        }));
+
+
+
 
 
 
@@ -60,6 +60,9 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
 
 
   }));
+
+
+  console.log(fieldOptions)
 
 
     const lookerVis = this;
@@ -117,6 +120,20 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         default:"Please Select",
         section: "Y-Axis",
       },
+
+
+      yAxisLeftValues: {
+        type: "string",
+        label: "Choose Y Axis Left Side Value",
+        display: "select",
+        placeholder: "Please Select",
+        values: fieldOptions,
+        order: 7,
+        default:'',
+        section: "Y-Axis",
+      },
+
+
       // yAxisText: {
       //   type: "string",
       //   label: "Write Y Axis Text Instead",
@@ -124,13 +141,13 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
       //   order: 7,
       // },
 
-      isYAxisCurrency: {
-        type: "boolean",
-        label: "Format Y Axis as Currency and Show",
-        default: true,
-        order: 10,
-        section: "Y-Axis",
-      },
+      // isYAxisCurrency: {
+      //   type: "boolean",
+      //   label: "Format Y Axis as Currencyå",
+      //   default: true,
+      //   order: 10,
+      //   section: "Y-Axis",
+      // },
 
 
            symbol: {
@@ -190,25 +207,25 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
               order: 16,
               section: "Y-Axis",
             },
-            // 
-            // yAxisRightValues: {
-            //   type: "string",
-            //   label: "Choose Y Axis Right Side Value",
-            //   display: "select",
-            //   placeholder: "Please Select",
-            //   values: fieldOptions,
-            //   order: 17,
-            //   default:'',
-            //   section: "Y-Axis",
-            // },
 
-            isYAxisCurrency2: {
-              type: "boolean",
-              label: "Format Y Axis Right Side as Currency",
-              default: false,
-              order: 18,
+            yAxisRightValues: {
+              type: "string",
+              label: "Choose Y Axis Right Side Value",
+              display: "select",
+              placeholder: "Please Select",
+              values: fieldOptions,
+              order: 17,
+              default:'',
               section: "Y-Axis",
             },
+
+            // isYAxisCurrency2: {
+            //   type: "boolean",
+            //   label: "Format Y Axis Right Side as Currency",
+            //   default: false,
+            //   order: 18,
+            //   section: "Y-Axis",
+            // },
 
             symbol2: {
              type: "string",
@@ -264,6 +281,26 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         order: 23,
           section: "Style",
       },
+
+      color_range: {
+        type: 'array',
+        label: 'Color Range',
+        display: 'colors',
+        default: ['#dd3333', '#80ce5d', '#f78131', '#369dc1', '#c572d3', '#36c1b3', '#b57052', '#ed69af'],
+        order: 24,
+        section: "Style",
+      },
+
+      removeSecond: {
+        type: "boolean",
+        label: "Remove Second Line from Chart",
+        default: false,
+        order: 25,
+        section: "Y-Axis",
+      },
+
+
+
     };
 
 

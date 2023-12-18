@@ -53,13 +53,15 @@ looker.plugins.visualizations.add({
          [dim.label]: queryResponse.data.map(row => row[dim.name].value).join(",")
        }));
 
-
+// console.log(fieldOptions)
 
 const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
     [dim.label]: dim.label
 
 
   }));
+
+  console.log(fieldOptions2, "fiellds")
 
 
     const lookerVis = this;
@@ -124,13 +126,13 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
       //   order: 7,
       // },
 
-      isYAxisCurrency: {
-        type: "boolean",
-        label: "Format Y Axis as Currency and Show",
-        default: true,
-        order: 10,
-        section: "Y-Axis",
-      },
+      // isYAxisCurrency: {
+      //   type: "boolean",
+      //   label: "Format Y Axis as Currency and Show",
+      //   default: true,
+      //   order: 10,
+      //   section: "Y-Axis",
+      // },
 
 
            symbol: {
@@ -139,7 +141,7 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
             display: "select",
             placeholder: "Please Select",
             values: fieldOptions,
-            order: 11,
+            order: 26,
             default:'',
             section: "Y-Axis",
           },
@@ -162,24 +164,24 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         section: "X-Axis",
       },
 
-      showYAxis2: {
-        type: "boolean",
-        label: "Show Y Axis Right Side Label",
-        default: false,
-        order: 14,
-        section: "Y-Axis",
-      },
+      // showYAxis2: {
+      //   type: "boolean",
+      //   label: "Show Y Axis Right Side Label",
+      //   default: false,
+      //   order: 14,
+      //   section: "Y-Axis",
+      // },
 
-      yAxisRightDropdown: {
-        type: "string",
-        label: "Choose Y Axis Right Side Label",
-        display: "select",
-        placeholder: "Please Select",
-        values: fieldOptions2,
-        order: 15,
-        default:'',
-        section: "Y-Axis",
-      },
+      // yAxisRightDropdown: {
+      //   type: "string",
+      //   label: "Choose Y Axis Right Side Label",
+      //   display: "select",
+      //   placeholder: "Please Select",
+      //   values: fieldOptions2,
+      //   order: 15,
+      //   default:'',
+      //   section: "Y-Axis",
+      // },
 
 
            //
@@ -257,11 +259,31 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
           section: "Style",
       },
 
+      yAxisLeftValues: {
+        type: "string",
+        label: "Choose Y Axis Left Side Value",
+        display: "select",
+        placeholder: "Please Select",
+        values: fieldOptions,
+        order: 23,
+        default:'',
+        section: "Y-Axis",
+      },
+
+      color_range: {
+        type: 'array',
+        label: 'Color Range',
+        display: 'colors',
+        default: ['#dd3333', '#80ce5d', '#f78131', '#369dc1', '#c572d3', '#36c1b3', '#b57052', '#ed69af'],
+        order: 24,
+        section: "Style",
+      },
+
       showAllValuesInTooltip: {
         type: "boolean",
         label: "Show All Row Values in Tooltip",
         default: true,
-        order: 23,
+        order: 25,
           section: "Style",
       },
     };
