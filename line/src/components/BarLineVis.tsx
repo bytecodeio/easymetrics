@@ -124,7 +124,8 @@ function BarLineVis({
     choosePoints,
     yAxisLeftValues,
     color_range,
-    removeSecond
+    removeSecond,
+    isYAxisRightCurrency
   } = config;
 
   // Chart type toggle
@@ -175,11 +176,7 @@ function BarLineVis({
 
   const dimensionName2 = fields.dimensions[1];
   const measureName2 = fields.measures[1];
-
-
-  console.log(fields)
-
-  console.log(measureName2,  "measure2")
+  const measureLabel2 = fields.measuresLabel[1];
 
 
   const [firstData = {}] = data;
@@ -228,33 +225,7 @@ function BarLineVis({
   );
 
 
-  // const colors = ["#6253DA", "#D0D9E1", "#6CBFEF", "#A3D982", "#E192ED"];
-  // const colors = [
-  //   '1A73E8',
-  //   '12B5CB',
-  //   'E52592',
-  //   '9334E6',
-  //   '079c98',
-  //   'E8710A',
-  //   'F9AB00',
-  //   '7CB342',
-  //   'EA4335',
-  //   'FF8168',
-  //   '1A73E8',
-  //   '12B5CB',
-  //   'E52592',
-  //   '9334E6',
-  //   '079c98',
-  //   'E8710A',
-  //   'F9AB00',
-  //   '7CB342',
-  //   'EA4335',
-  //   'FF8168',
-  // ];
-
   const colors = config.color_range
-
-  console.log(color_range)
 
   const hasPivot = !!fields.pivots && fields.pivots.length > 0;
 
@@ -281,31 +252,13 @@ function BarLineVis({
   };
   const [chartData, setChartData] = useState(defaultChartData);
 
-  // function createGradient(
-  //   ctx: CanvasRenderingContext2D,
-  //   startColor: string,
-  //   endColor: string
-  // ): CanvasGradient {
-  //   const gradientFill = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-  //   gradientFill.addColorStop(0, startColor);
-  //   gradientFill.addColorStop(1, endColor);
-  //   return gradientFill;
-  // }
+
 
   function updateChartData(chartType: ChartType) {
     let datasets = [];
     let canvasElement = document.getElementById("chart") as HTMLCanvasElement;
     if (canvasElement) {
       const ctx = canvasElement.getContext("2d");
-
-
-
-// const vals = Object.keys(data[0][yAxisRightValues[0]]);
-// vals.forEach((pivotValue, i) => {
-//   const columnData = data.map((row) => row[measures[0]][pivotValue].value);
-// console.log(vals)
-//
-// })
 
 
       if (hasPivot) {
@@ -316,13 +269,6 @@ function BarLineVis({
             (row) => row[measureName][pivotValue].value
           );
 
-          // const gradientFill = createGradient(
-          //   ctx,
-          //   `#${colors[i]}`,
-          //   `#${colors[i]}00`
-          // );
-
-          console.log(colors, "hi")
 
           datasets.push({
 
@@ -350,7 +296,7 @@ function BarLineVis({
 
       {
         type: chartType,
-        label: yAxisDropdown,
+        label: measureLabel,
         backgroundColor:
           chartType === "line" ? `#${colors[1]}` : `#${colors[0]}`,
         borderColor: `${color_range ? colors[0] : colors[0]}`,
@@ -371,39 +317,34 @@ function BarLineVis({
         datasets.push(
 
           {
-            type: 'line',
+            type: chartType,
 
-            label: yAxisRightDropdown,
+            // label: yAxisRightDropdown,
+            label: measureLabel2,
             backgroundColor:
               chartType === "line" ? `#${colors[1]}` : `#${colors[1]}`,
               borderColor: `${color_range ? colors[1] : colors[1]}`,
               pointBackgroundColor: `${color_range ? colors[1] : colors[1]}`,
-            // data: yAxisRightValues,
-            // data: [99, 56, 34, 15, 67, 88, 89],
-            //
-            // data: data.map((row) => row[yAxisRightValues]),
-            data: yAxisRightValues ? yAxisRightValues.split(",") : data.map((row) => row[measureName].value),
+            data: data.map((row) => row[measureName2].value),
+            // data: yAxisRightValues ? yAxisRightValues.split(",") : data.map((row) => row[measureName].value),
             yAxisID: "yRight",
             fill,
           },
 
           {
             type: chartType,
-            label: yAxisDropdown,
+            label: measureLabel,
+            // label: yAxisDropdown,
             backgroundColor:
               chartType === "line" ? `#${colors[1]}` : `#${colors[0]}`,
             borderColor: `${color_range ? colors[0] : colors[0]}`,
             pointBackgroundColor: `${color_range ? colors[0] : colors[0]}`,
-            // data: data.map((row) => row[measureName].value),
-            data: yAxisLeftValues ? yAxisLeftValues.split(",") : data.map((row) => row[measureName].value),
+            data: data.map((row) => row[measureName].value),
+            // data: yAxisLeftValues ? yAxisLeftValues.split(",") : data.map((row) => row[measureName].value),
             yAxisID: "yLeft",
             fill,
           }
         );
-
-
-
-
 
 
       }
@@ -521,10 +462,11 @@ function BarLineVis({
       }
 
       setTooltip({
-        dimensionLabel0: `${xAxisDropdownValues}:`,
-        dimensionLabel: `${context.tooltip.title[0]}`,
-        measureLabel: `${yAxisDropdownValues}: `,
-        measureLabel0: `${context.tooltip.dataPoints[0].formattedValue}`,
+
+           dimensionLabel0: `${dimensionLabel}:`,
+           dimensionLabel: `${context.tooltip.title[0]}`,
+           measureLabel: `${context.tooltip.dataPoints[0].dataset.label}: `,
+           measureLabel0: `${context.tooltip.dataPoints[0].formattedValue}`,
         left:
           position.left + window.pageXOffset + context.tooltip.caretX + "px",
         rows,
@@ -544,55 +486,82 @@ function BarLineVis({
 
 
 
-console.log(xAxisDropdown)
-
-  const Content = config.xAxisDropdown.split(",").map((d, i) => ({
-    xAxisDropdown: d,
-    yAxisDropdown: config.yAxisDropdown.split(",")[i],
-    yAxisLeftValues:config.yAxisLeftValues.split(",")[i],
-    symbol: config.symbol.split(",")[i],
-    yAxisRightDropdown: config.yAxisRightDropdown.split(",")[i],
-    yAxisRightValues: config.yAxisRightValues.split(",")[i],
-    symbol2: config.symbol2.split(",")[i],
-
-  }))
-
-console.log(xAxisDropdown)
-
-
-  let result = Content.map(function (val, i) { return val.symbol });
-
-  let theSymbol = result[0]
-
-
-
-  let result2 = Content.map(function (val, i) { return val.symbol2 })
-
-  let theSymbol2 = result2[0]
-
-  let xAxisDropdownValues = Content.map(function (val, i) { return val.xAxisDropdown })
-
-
-  let yAxisDropdownValues = Content.map(function (val, i) { return val.yAxisDropdown })
-
-
-
-  let yAxisRightDropdownValues = Content.map(function (val, i) { return val.yAxisRightDropdown })
+// console.log(xAxisDropdown)
+//
+//   const Content = config.xAxisDropdown.split(",").map((d, i) => ({
+//     xAxisDropdown: d,
+//     yAxisDropdown: config.yAxisDropdown.split(",")[i],
+//     yAxisLeftValues:config.yAxisLeftValues.split(",")[i],
+//     symbol: config.symbol.split(",")[i],
+//     yAxisRightDropdown: config.yAxisRightDropdown.split(",")[i],
+//     yAxisRightValues: config.yAxisRightValues.split(",")[i],
+//     symbol2: config.symbol2.split(",")[i],
+//
+//   }))
+//
+// console.log(xAxisDropdown)
+//
+//
+//   let result = Content.map(function (val, i) { return val.symbol });
+//
+//   let theSymbol = result[0]
+//
+//
+//
+//   let result2 = Content.map(function (val, i) { return val.symbol2 })
+//
+//   let theSymbol2 = result2[0]
+//
+//   let xAxisDropdownValues = Content.map(function (val, i) { return val.xAxisDropdown })
+//
+//
+//   let yAxisDropdownValues = Content.map(function (val, i) { return val.yAxisDropdown })
+//
+//
+//
+//   let yAxisRightDropdownValues = Content.map(function (val, i) { return val.yAxisRightDropdown })
 
   // let yAxisRightValues = Content.map(function (val, i) { return val.yAxisRightValues })
 
 
 
 
-  const ranges3 = [
+  if (text === '$') {
+
+  var ranges = [
     { divider: 1e9, suffix: "b" },
     { divider: 1e6, suffix: "m" },
     { divider: 1e3, suffix: "k" },
   ];
 
-function formatNumber3(n: number) {
-    for (let i = 0; i < ranges3.length; i++) {
-      const { divider, suffix } = ranges3[i];
+  }
+
+  else if (text === '€') {
+
+  var ranges = [
+    { divider: 1e9, suffix: "b" },
+    { divider: 1e6, suffix: "m" },
+    { divider: 1e3, suffix: "k" },
+  ];
+
+  }
+
+
+  else if (text === '¥') {
+
+  var ranges = [
+    { divider: 1e9, suffix: "b" },
+    { divider: 1e6, suffix: "m" },
+    { divider: 1e3, suffix: "k" },
+  ];
+
+  }
+
+
+
+   function formatNumber3(n: number) {
+    for (let i = 0; i < ranges.length; i++) {
+      const { divider, suffix } = ranges[i];
       if (n >= divider) {
         return `${n / divider}${suffix}`;
       }
@@ -600,6 +569,7 @@ function formatNumber3(n: number) {
     return n.toString();
     // console.log(n.toString())
   }
+
 
 
   const chartOptions: ChartOptions<"scatter" | "bar"> = useMemo(
@@ -667,7 +637,8 @@ function formatNumber3(n: number) {
           stacked: isStacked,
           title: {
             display: showXAxisLabel,
-            text: ` ${xAxisDropdown ? xAxisDropdownValues : dimensionLabel}`,
+            // text: ` ${xAxisDropdown ? xAxisDropdownValues : dimensionLabel}`,
+            text: ` ${dimensionLabel}`,
             font: {
               size: 14
             }
@@ -683,12 +654,14 @@ function formatNumber3(n: number) {
           ticks: {
             // display: isYAxisCurrency,
             callback: function (value: number) {
-              return `${symbol ? theSymbol : text}${formatNumber3(value)}`;
+
+            return `${isYAxisCurrency ? text : ""}${formatNumber3(value)}`;
             },
           },
           title: {
             display: showYAxisLabel,
-            text: `${yAxisDropdown ? yAxisDropdownValues : measureLabel}`,
+            // text: `${yAxisDropdown ? yAxisDropdownValues : measureLabel}`,
+            text: measureLabel,
             font: {
               size: 14
             }
@@ -697,22 +670,24 @@ function formatNumber3(n: number) {
         },
 
         yRight: {
+
           grid: {
             display: false,
           },
           position: "right" as const,
-          display: true,
+          display:  !removeSecond,
           ticks: {
 
-            display: showYAxis2Value,
+            display: true,
 
             callback: function (value: number) {
-              return `${symbol2 ? theSymbol2 : text}${formatNumber(value)}`;
+              return `${isYAxisRightCurrency ? text : ""}${formatNumber3(value)}`;
             },
           },
           title: {
-            display: showYAxis2,
-            text: `${yAxisRightDropdown ? yAxisRightDropdownValues : measureLabel}`,
+            display: true,
+            // text: `${yAxisRightDropdown ? yAxisRightDropdownValues : measureLabel}`,
+            text: measureLabel2,
             font: {
               size: 14
             }
@@ -749,6 +724,9 @@ function formatNumber3(n: number) {
     setSelectedChartType(newChartType);
     updateChartData(newChartType);
   }
+
+
+
 
   return (
     <div id="vis-wrapper" className={`${config.showPoints ? "points hidePoints" : "points"}`}>

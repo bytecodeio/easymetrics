@@ -88,6 +88,10 @@ const { dimensionLabel, left, rows, top, yAlign, measureValue, dimensionName, me
       <div className="dimension-label">{measureLabel}</div>
       <div className="dimension-label">{measureLabel0}</div>
 
+
+
+      {console.log(measureLabel0, measureLabel)}
+
       </div>
         )}
 
