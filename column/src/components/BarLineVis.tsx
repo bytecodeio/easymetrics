@@ -218,18 +218,20 @@ let points = points.toString()
 //   console.log("sfkbsfbksbksdbksbdvkbbs")
 // }
 
-// var word = measureName.split(".")[1]
-//
-//
-// var word = word.replace(/_/g, ' ').replace(/(?: |\b)(\w)/g, function(word) { return word.toUpperCase()});
-//
-// console.log(word)
+var word = measureName.split(".")[1]
 
-// console.log(firstData, "one")
-// console.log(cols_to_hide, "two")
 
-// let text = cols_to_hide.toString().slice(0, -1);
+var word = word.replace(/_/g, ' ').replace(/(?: |\b)(\w)/g, function(word) { return word.toUpperCase()});
+
+console.log(word)
+
+console.log(firstData, "one")
+console.log(cols_to_hide, "two")
+
+let text = cols_to_hide.toString().slice(0, -1);
 let text = cols_to_hide.toString()
+
+console.log(text)
 
 
   const labels = data.map(
