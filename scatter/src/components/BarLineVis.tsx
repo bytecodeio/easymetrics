@@ -182,7 +182,7 @@ const [firstData = {}] = data;
 let cols_to_hide = [];
 
 for (const [key, value] of Object.entries(firstData)) {
-  if (key.split(".")[1] === "currency_number_format") {
+  if (key.split(".")[1] === "currency_number_format" || key.split(".")[1] === "currency_symbol") {
     cols_to_hide = firstData[key].value.split(",").map((e) => e.trim());
 
   }
@@ -446,9 +446,9 @@ console.log(text)
       }
 
       setTooltip({
-        dimensionLabel0: `${xAxisDropdownValues}:`,
+        dimensionLabel0: `${dimensionLabel}:`,
         dimensionLabel: `${context.tooltip.title[0]}`,
-        measureLabel: `${yAxisDropdownValues}: `,
+        measureLabel: `${context.tooltip.dataPoints[0].dataset.label}: `,
         measureLabel0: `${context.tooltip.dataPoints[0].formattedValue}`,
         left:
           position.left + window.pageXOffset + context.tooltip.caretX + "px",
@@ -469,33 +469,33 @@ console.log(text)
 
 
 
+      //
+      //
+      // const Content = config.xAxisDropdown.split(",").map((d, i) => ({
+      // xAxisDropdown: d,
+      // yAxisDropdown:config.yAxisDropdown.split(",")[i],
+      // symbol:config.symbol.split(",")[i],
+      // // yAxisRightDropdown:config.yAxisRightDropdown.split(",")[i],
+      // // yAxisRightValues:config.yAxisRightValues.split(",")[i],
+      // // symbol2:config.symbol2.split(",")[i],
+      //
+      // }))
 
 
-      const Content = config.xAxisDropdown.split(",").map((d, i) => ({
-      xAxisDropdown: d,
-      yAxisDropdown:config.yAxisDropdown.split(",")[i],
-      symbol:config.symbol.split(",")[i],
-      // yAxisRightDropdown:config.yAxisRightDropdown.split(",")[i],
-      // yAxisRightValues:config.yAxisRightValues.split(",")[i],
-      // symbol2:config.symbol2.split(",")[i],
-
-      }))
-
-
-let result = Content.map(function(val, i){ return val.symbol });
-
-let theSymbol = result[0]
-
-
-
-// let result2 = Content.map(function(val, i){ return val.symbol2 });
+// let result = Content.map(function(val, i){ return val.symbol });
 //
-// let theSymbol2 = result2[0]
-
-let xAxisDropdownValues = Content.map(function(val, i){ return val.xAxisDropdown });
-
-
-let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown });
+// let theSymbol = result[0]
+//
+//
+//
+// // let result2 = Content.map(function(val, i){ return val.symbol2 });
+// //
+// // let theSymbol2 = result2[0]
+//
+// let xAxisDropdownValues = Content.map(function(val, i){ return val.xAxisDropdown });
+//
+//
+// let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown });
 
 
 //
@@ -504,6 +504,53 @@ let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown
 // let yAxisRightValues = Content.map(function(val, i){ return val.yAxisRightValues });
 //
 //
+
+
+
+
+  if (text === '$') {
+
+  var ranges = [
+    { divider: 1e9, suffix: "b" },
+    { divider: 1e6, suffix: "m" },
+    { divider: 1e3, suffix: "k" },
+  ];
+
+  }
+
+  else if (text === '€') {
+
+  var ranges = [
+    { divider: 1e9, suffix: "b" },
+    { divider: 1e6, suffix: "m" },
+    { divider: 1e3, suffix: "k" },
+  ];
+
+  }
+
+
+  else if (text === '¥') {
+
+  var ranges = [
+    { divider: 1e9, suffix: "b" },
+    { divider: 1e6, suffix: "m" },
+    { divider: 1e3, suffix: "k" },
+  ];
+
+  }
+
+
+
+   function formatNumber3(n: number) {
+    for (let i = 0; i < ranges.length; i++) {
+      const { divider, suffix } = ranges[i];
+      if (n >= divider) {
+        return `${n / divider}${suffix}`;
+      }
+    }
+    return n.toString();
+    // console.log(n.toString())
+  }
 
 
 
@@ -517,7 +564,7 @@ let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown
       },
 
       onClick: (event, elements, chart) => {
-
+    
         if (!elements.length) {
           return;
         }
@@ -569,10 +616,11 @@ let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown
           grid: {
             display: showXGridLines,
           },
-          stacked: isStacked,
+          // stacked: isStacked,
           title: {
             display: showXAxisLabel,
-            text: `${showPoints ? choosePoints : ""} ${xAxisDropdown ?  xAxisDropdownValues  : dimensionLabel }`,
+            text: `${showPoints ? points : ""} ${dimensionLabel}`,
+            // text: `${showPoints ? choosePoints : ""} ${xAxisDropdown ?  xAxisDropdownValues  : dimensionLabel }`,
             font: {
               size: 14
             }
@@ -602,17 +650,20 @@ let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown
             display: showYGridLines,
           },
           position: "left" as const,
-          stacked: isStacked,
+          // stacked: isStacked,
           ticks: {
             display:isYAxisCurrency,
             callback: function (value: number) {
               // console.log('y-ticks', `${symbol ? theSymbol : text}`, symbol, theSymbol)
-              return `${symbol ? theSymbol : text}${formatNumber(value)}`;
+              return `${isYAxisCurrency ? text : ""}${formatNumber(value)}`;
+              // return `${symbol ? theSymbol : text}${formatNumber(value)}`;
             },
           },
           title: {
             display: showYAxisLabel,
-            text: `${yAxisDropdown ?  yAxisDropdownValues  : measureLabel }`,
+
+            text: measureLabel,
+            // text: `${yAxisDropdown ?  yAxisDropdownValues  : measureLabel }`,
             font: {
               size: 14
             }

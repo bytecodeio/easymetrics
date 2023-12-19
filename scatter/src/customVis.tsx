@@ -61,7 +61,7 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
 
   }));
 
-  console.log(fieldOptions2, "fiellds")
+
 
 
     const lookerVis = this;
@@ -84,16 +84,16 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         order: 2,
         section: "X-Axis",
       },
-      xAxisDropdown: {
-        type: "string",
-        label: "Choose X Axis Label Value",
-        display: "select",
-        placeholder: "Please Select",
-        values: fieldOptions2,
-        order: 3,
-        default:"Please Select",
-        section: "X-Axis",
-      },
+      // xAxisDropdown: {
+      //   type: "string",
+      //   label: "Choose X Axis Label Value",
+      //   display: "select",
+      //   placeholder: "Please Select",
+      //   values: fieldOptions2,
+      //   order: 3,
+      //   default:"Please Select",
+      //   section: "X-Axis",
+      // },
       // xAxisText: {
       //   type: "string",
       //   label: "Write X Axis Text Instead",
@@ -109,16 +109,16 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         section: "Y-Axis",
       },
 
-      yAxisDropdown: {
-        type: "string",
-        label: "Choose Y Axis Label Value",
-        display: "select",
-        placeholder: "Please Select",
-        values: fieldOptions2,
-        order: 6,
-        default:"Please Select",
-        section: "Y-Axis",
-      },
+      // yAxisDropdown: {
+      //   type: "string",
+      //   label: "Choose Y Axis Label Value",
+      //   display: "select",
+      //   placeholder: "Please Select",
+      //   values: fieldOptions2,
+      //   order: 6,
+      //   default:"Please Select",
+      //   section: "Y-Axis",
+      // },
       // yAxisText: {
       //   type: "string",
       //   label: "Write Y Axis Text Instead",
@@ -134,17 +134,17 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
       //   section: "Y-Axis",
       // },
 
-
-           symbol: {
-            type: "string",
-            label: "Select Currency Symbol",
-            display: "select",
-            placeholder: "Please Select",
-            values: fieldOptions,
-            order: 26,
-            default:'',
-            section: "Y-Axis",
-          },
+          //
+          //  symbol: {
+          //   type: "string",
+          //   label: "Select Currency Symbol",
+          //   display: "select",
+          //   placeholder: "Please Select",
+          //   values: fieldOptions,
+          //   order: 26,
+          //   default:'',
+          //   section: "Y-Axis",
+          // },
       showPoints: {
         type: "boolean",
         label: "Show Points Sized By",
@@ -153,16 +153,16 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         section: "X-Axis",
       },
 
-      choosePoints: {
-        type: "string",
-        label: "Choose Label for Points Sized By",
-        display: "select",
-        placeholder: "Please Select",
-        values: fieldOptions2,
-        order: 13,
-        default:'',
-        section: "X-Axis",
-      },
+      // choosePoints: {
+      //   type: "string",
+      //   label: "Choose Label for Points Sized By",
+      //   display: "select",
+      //   placeholder: "Please Select",
+      //   values: fieldOptions2,
+      //   order: 13,
+      //   default:'',
+      //   section: "X-Axis",
+      // },
 
       // showYAxis2: {
       //   type: "boolean",
@@ -230,13 +230,13 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
       //   default: "sq ft",
       //   order: 10,
       // },
-      isStacked: {
-        type: "boolean",
-        label: "Stacked",
-        default: false,
-        order: 20,
-        section: "Style",
-      },
+      // isStacked: {
+      //   type: "boolean",
+      //   label: "Stacked",
+      //   default: false,
+      //   order: 20,
+      //   section: "Style",
+      // },
       // showLineChartGradient: {
       //   type: "boolean",
       //   label: "Show Line Chart Gradient",
@@ -259,16 +259,16 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
           section: "Style",
       },
 
-      yAxisLeftValues: {
-        type: "string",
-        label: "Choose Y Axis Left Side Value",
-        display: "select",
-        placeholder: "Please Select",
-        values: fieldOptions,
-        order: 23,
-        default:'',
-        section: "Y-Axis",
-      },
+      // yAxisLeftValues: {
+      //   type: "string",
+      //   label: "Choose Y Axis Left Side Value",
+      //   display: "select",
+      //   placeholder: "Please Select",
+      //   values: fieldOptions,
+      //   order: 23,
+      //   default:'',
+      //   section: "Y-Axis",
+      // },
 
       color_range: {
         type: 'array',

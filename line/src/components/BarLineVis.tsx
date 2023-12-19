@@ -183,7 +183,7 @@ function BarLineVis({
   let cols_to_hide = [];
 
   for (const [key, value] of Object.entries(firstData)) {
-    if (key.split(".")[1] === "currency_number_format") {
+    if (key.split(".")[1] === "currency_number_format" || key.split(".")[1] === "currency_symbol") {
       cols_to_hide = firstData[key].value.split(",").map((e) => e.trim());
 
     }
