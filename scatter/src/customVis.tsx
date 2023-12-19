@@ -305,12 +305,11 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
     const { dimension_like, measure_like, pivots } = queryResponse.fields;
     const fields: Fields = {
       dimensions: dimension_like.map((d) => d.name),
-      dimensionsLabel: dimension_like.map((d) => d.label),
+      dimensionsLabel: dimension_like.map((d) => d.label_short),
       measures: measure_like.map((m) => m.name),
-      measuresLabel: measure_like.map((m) => m.label),
+      measuresLabel: measure_like.map((m) => m.label_short),
       pivots: pivots?.map((p) => p.name),
     };
-
 
 
 

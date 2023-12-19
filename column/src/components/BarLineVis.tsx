@@ -1,5 +1,6 @@
 import {
   Fields,
+  Measures1,
   Link,
   LookerChartUtils,
   TooltipData,
@@ -58,6 +59,7 @@ ChartJS.register(
 interface BarLineVisProps {
   data: VisData;
   fields: Fields;
+  measures1: Measures1;
   config: VisConfig;
   lookerCharts: LookerChartUtils;
   lookerVis?: any;
@@ -93,6 +95,7 @@ ChartJS.defaults.color = "#262D33";
 function BarLineVis({
   data,
   fields,
+  measures1,
   config,
   lookerCharts,
   lookerVis,
@@ -186,17 +189,29 @@ console.log(lookerVis)
   const measureLabel = fields.measuresLabel[0];
 
 
+
+
+
 const [firstData = {}] = data;
+
+
+
+
+
+
+
+
 let cols_to_hide = [];
 
 for (const [key, value] of Object.entries(firstData)) {
-  if (key.split(".")[1] === "currency_number_format") {
+  if (key.split(".")[1] === "currency_number_format" || key.split(".")[1] === "currency_symbol") {
     cols_to_hide = firstData[key].value.split(",").map((e) => e.trim());
 
   }
 }
 
-// console.log(firstData)
+
+
 
 let points = [];
 
@@ -208,15 +223,6 @@ for (const [key, value] of Object.entries(firstData)) {
 }
 let points = points.toString()
 
-
-
-// let elem = document.getElementById("vis-wrapper");
-//
-// let isMainPresent = elem.classList.contains("hidePoints");
-//
-// if (isMainPresent === true){
-//   console.log("sfkbsfbksbksdbksbdvkbbs")
-// }
 
 var word = measureName.split(".")[1]
 
@@ -238,15 +244,10 @@ console.log(text)
     (row) => row[dimensionName].rendered ?? row[dimensionName].value ?? "∅"
   );
 
-
-
   const colors = config.color_range
-
-
   const hasPivot = !!fields.pivots && fields.pivots.length > 0;
 
   const hasNoPivot = !!fields.pivots && fields.pivots.length === 0;
-
   const fill = showLineChartGradient ? "origin" : false;
 
 
@@ -335,8 +336,8 @@ console.log(text)
           backgroundColor:`${color_range ? colors[0] : colors[0]}`,
           borderColor: `${color_range ? colors[0] : colors[0]}`,
           pointBackgroundColor: `${color_range ? colors[0] : colors[0]}`,
-          // data: data.map((row) => row[measureName].value),
-          data: yAxisLeftValues ? yAxisLeftValues.split(",") : data.map((row) => row[measureName].value),
+          data: data.map((row) => row[measureName].value),
+          // data: yAxisLeftValues ? yAxisLeftValues.split(",") : data.map((row) => row[measureName].value),
           yAxisID: "yLeft",
           fill,
         });
@@ -413,7 +414,6 @@ console.log(text)
                 isYAxisCurrency ? "$" : ""
               }${currentPeriodValue}`,
 
-
               periodComparisonValue,
               pivotColor: `#${colors[i]}`,
               pivotText: pivotName,
@@ -430,8 +430,6 @@ console.log(text)
       else {
 
         const pivotValue = context.tooltip.dataPoints[0].dataset.label;
-
-
 
         const previousPeriodValue =
           data[dataIndex][periodComparisonMeasure][pivotValue].value;
@@ -460,10 +458,10 @@ console.log(text)
       }
 
       setTooltip({
-        dimensionLabel0: `${xAxisDropdownValues}:`,
-        dimensionLabel: `${context.tooltip.title[0]}`,
-        measureLabel: `${yAxisDropdownValues}: `,
-        measureLabel0: `${context.tooltip.dataPoints[0].formattedValue}`,
+          dimensionLabel0: `${dimensionLabel}:`,
+          dimensionLabel: `${context.tooltip.title[0]}`,
+          measureLabel: `${context.tooltip.dataPoints[0].dataset.label}: `,
+          measureLabel0: `${context.tooltip.dataPoints[0].formattedValue}`,
         left:
           position.left + window.pageXOffset + context.tooltip.caretX + "px",
         rows,
@@ -485,32 +483,32 @@ console.log(text)
 
 
 
-      const Content = config.xAxisDropdown.split(",").map((d, i) => ({
-      xAxisDropdown: d,
-      yAxisDropdown:config.yAxisDropdown.split(",")[i],
-      symbol:config.symbol.split(",")[i],
-      yAxisLeftValues:config.yAxisLeftValues.split(",")[i],
-      // yAxisRightDropdown:config.yAxisRightDropdown.split(",")[i],
-      // yAxisRightValues:config.yAxisRightValues.split(",")[i],
-      // symbol2:config.symbol2.split(",")[i],
-
-      }))
-
-
-let result = Content.map(function(val, i){ return val.symbol });
-
-let theSymbol = result[0]
+//       const Content = config.xAxisDropdown.split(",").map((d, i) => ({
+//       xAxisDropdown: d,
+//       yAxisDropdown:config.yAxisDropdown.split(",")[i],
+//       symbol:config.symbol.split(",")[i],
+//       yAxisLeftValues:config.yAxisLeftValues.split(",")[i],
+//       // yAxisRightDropdown:config.yAxisRightDropdown.split(",")[i],
+//       // yAxisRightValues:config.yAxisRightValues.split(",")[i],
+//       // symbol2:config.symbol2.split(",")[i],
+//
+//       }))
+//
+//
+// let result = Content.map(function(val, i){ return val.symbol });
+//
+// let theSymbol = result[0]
 
 
 
 // let result2 = Content.map(function(val, i){ return val.symbol2 });
 //
 // let theSymbol2 = result2[0]
-
-let xAxisDropdownValues = Content.map(function(val, i){ return val.xAxisDropdown });
-
-
-let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown });
+//
+// let xAxisDropdownValues = Content.map(function(val, i){ return val.xAxisDropdown });
+//
+//
+// let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown });
 
 
 //
@@ -525,7 +523,62 @@ let yAxisDropdownValues = Content.map(function(val, i){ return val.yAxisDropdown
 
 
 
-console.log(yAxisDropdownValues, "this is the picked label from config")
+// console.log(yAxisDropdownValues, "this is the picked label from config")
+
+
+if (text === '$') {
+
+var ranges = [
+  { divider: 1e9, suffix: "b" },
+  { divider: 1e6, suffix: "m" },
+  { divider: 1e3, suffix: "k" },
+];
+
+}
+
+else if (text === '€') {
+
+var ranges = [
+  { divider: 1e9, suffix: "b" },
+  { divider: 1e6, suffix: "m" },
+  { divider: 1e3, suffix: "k" },
+];
+
+}
+
+
+else if (text === '¥') {
+
+var ranges = [
+  { divider: 1e9, suffix: "b" },
+  { divider: 1e6, suffix: "m" },
+  { divider: 1e3, suffix: "k" },
+];
+
+}
+
+
+
+
+
+
+
+
+
+ function formatNumber3(n: number) {
+  for (let i = 0; i < ranges.length; i++) {
+    const { divider, suffix } = ranges[i];
+    if (n >= divider) {
+      return `${n / divider}${suffix}`;
+    }
+  }
+  return n.toString();
+  // console.log(n.toString())
+}
+
+
+
+
 
   const chartOptions: ChartOptions<"scatter" | "bar"> = useMemo(
     () => ({
@@ -592,7 +645,7 @@ console.log(yAxisDropdownValues, "this is the picked label from config")
           stacked: isStacked,
           title: {
             display: showXAxisLabel,
-            text: ` ${xAxisDropdown ?  xAxisDropdownValues  : dimensionLabel }`,
+            text: `${showPoints ? points : ""} ${dimensionLabel}`,
             font: {
               size: 14
             }
@@ -608,12 +661,12 @@ console.log(yAxisDropdownValues, "this is the picked label from config")
           ticks: {
             display:isYAxisCurrency,
             callback: function (value: number) {
-              return `${symbol ? theSymbol : text}${formatNumber(value)}`;
-            },
+             return `${isYAxisCurrency ? text : ""}${formatNumber3(value)}`;
+           },
           },
           title: {
             display: showYAxisLabel,
-            text: `${yAxisDropdown ?  yAxisDropdownValues  : measureLabel }`,
+            text: measureLabel,
             font: {
               size: 14
             }

@@ -40,28 +40,25 @@ looker.plugins.visualizations.add({
      const { measure_like: measureLike } = queryResponse.fields;
 
 
-     const measures1 = measureLike.map((measure) => ({
+     const measures1: Measures1  = measureLike.map((measure) => ({
        label: measure.label_short ?? measure.label,
        name: measure.name,
      }));
-
-
 
 
      const fieldOptions = [...dimensions1, ...measures1].map((dim) => ({
          [dim.label]: queryResponse.data.map(row => row[dim.name].value).join(",")
        }));
 
+      const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
+        [dim.label]: dim.label
+
+      }));
+
+console.log(fieldOptions2)
 
 
-const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
-    [dim.label]: dim.label
-
-
-  }));
-
-
-  console.log(fieldOptions2, "all labels")
+  // console.log(fieldOptions2, "all labels")
 
 
 
@@ -98,16 +95,16 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         order: 2,
         section: "X-Axis",
       },
-      xAxisDropdown: {
-        type: "string",
-        label: "Choose X Axis Label Value",
-        display: "select",
-        placeholder: "Please Select",
-        values: fieldOptions2,
-        order: 3,
-        default:"Please Select",
-        section: "X-Axis",
-      },
+      // xAxisDropdown: {
+      //   type: "string",
+      //   label: "Choose X Axis Label Value",
+      //   display: "select",
+      //   placeholder: "Please Select",
+      //   values: fieldOptions2,
+      //   order: 3,
+      //   default:"Please Select",
+      //   section: "X-Axis",
+      // },
       // xAxisText: {
       //   type: "string",
       //   label: "Write X Axis Text Instead",
@@ -123,16 +120,16 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         section: "Y-Axis",
       },
 
-      yAxisDropdown: {
-        type: "string",
-        label: "Choose Y Axis Label Value",
-        display: "select",
-        placeholder: "Please Select",
-        values: fieldOptions2,
-        order: 6,
-        default:"Please Select",
-        section: "Y-Axis",
-      },
+      // yAxisDropdown: {
+      //   type: "string",
+      //   label: "Choose Y Axis Label Value",
+      //   display: "select",
+      //   placeholder: "Please Select",
+      //   values: fieldOptions2,
+      //   order: 6,
+      //   default:"Please Select",
+      //   section: "Y-Axis",
+      // },
       // yAxisText: {
       //   type: "string",
       //   label: "Write Y Axis Text Instead",
@@ -140,25 +137,25 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
       //   order: 7,
       // },
 
-      // isYAxisCurrency: {
-      //   type: "boolean",
-      //   label: "Format Y Axis as Currency and Show",
-      //   default: true,
-      //   order: 10,
-      //   section: "Y-Axis",
-      // },
+      isYAxisCurrency: {
+        type: "boolean",
+        label: "Show Currency",
+        default: true,
+        order: 10,
+        section: "Y-Axis",
+      },
 
 
-           symbol: {
-            type: "string",
-            label: "Select Currency Symbol",
-            display: "select",
-            placeholder: "Please Select",
-            values: fieldOptions,
-            order: 26,
-            default:'',
-            section: "Y-Axis",
-          },
+          //  symbol: {
+          //   type: "string",
+          //   label: "Select Currency Symbol",
+          //   display: "select",
+          //   placeholder: "Please Select",
+          //   values: fieldOptions,
+          //   order: 26,
+          //   default:'',
+          //   section: "Y-Axis",
+          // },
       // showPoints: {
       //   type: "boolean",
       //   label: "Show Points Sized By",
@@ -288,16 +285,16 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         order: 24,
         section: "Style",
       },
-      yAxisLeftValues: {
-        type: "string",
-        label: "Choose Y Axis Left Side Value",
-        display: "select",
-        placeholder: "Please Select",
-        values: fieldOptions,
-        order: 25,
-        default:'',
-        section: "Y-Axis",
-      },
+      // yAxisLeftValues: {
+      //   type: "string",
+      //   label: "Choose Y Axis Left Side Value",
+      //   display: "select",
+      //   placeholder: "Please Select",
+      //   values: fieldOptions,
+      //   order: 25,
+      //   default:'',
+      //   section: "Y-Axis",
+      // },
     };
 
 
@@ -315,21 +312,15 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
       }
     }
 
-  console.log(configKeys, "configKeys")
-  console.log(validatedConfig, "validatedConfig")
-
     // get dimensions and measures
     const { dimension_like, measure_like, pivots } = queryResponse.fields;
     const fields: Fields = {
       dimensions: dimension_like.map((d) => d.name),
-      dimensionsLabel: dimension_like.map((d) => d.label),
+      dimensionsLabel: dimension_like.map((d) => d.label_short),
       measures: measure_like.map((m) => m.name),
-      measuresLabel: measure_like.map((m) => m.label),
+      measuresLabel: measure_like.map((m) => m.label_short),
       pivots: pivots?.map((p) => p.name),
     };
-
-
-
 
 
     // create react root
