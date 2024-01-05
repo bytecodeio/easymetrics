@@ -508,7 +508,60 @@ console.log(text)
 
 
 
-  if (text === '$') {
+if (text === '$') {
+
+var ranges = [
+  { divider: 1e9, suffix: "b" },
+  { divider: 1e6, suffix: "m" },
+  { divider: 1e3, suffix: "k" },
+];
+
+}
+
+else if (text === '€') {
+
+var ranges = [
+  { divider: 1e9, suffix: "Mrd." },
+  { divider: 1e6, suffix: "Mio." },
+  { divider: 1e3, suffix: "Tsd." },
+];
+
+}
+
+
+else if (text === '¥') {
+
+var ranges = [
+  { divider: 1e9, suffix: "十亿" },
+  { divider: 1e6, suffix: "千万" },
+  { divider: 1e3, suffix: "	千" },
+];
+
+}
+
+
+else if (text === '₩') {
+
+var ranges = [
+  { divider: 1e9, suffix: "십억" },
+  { divider: 1e6, suffix: "백만" },
+  { divider: 1e3, suffix: "천" },
+];
+
+}
+
+
+else if (text === '฿') {
+
+var ranges = [
+  { divider: 1e9, suffix: "พันล้าน" },
+  { divider: 1e6, suffix: "ล้าน" },
+  { divider: 1e3, suffix: "พัน" },
+];
+
+}
+
+else{
 
   var ranges = [
     { divider: 1e9, suffix: "b" },
@@ -516,43 +569,21 @@ console.log(text)
     { divider: 1e3, suffix: "k" },
   ];
 
-  }
-
-  else if (text === '€') {
-
-  var ranges = [
-    { divider: 1e9, suffix: "b" },
-    { divider: 1e6, suffix: "m" },
-    { divider: 1e3, suffix: "k" },
-  ];
-
-  }
-
-
-  else if (text === '¥') {
-
-  var ranges = [
-    { divider: 1e9, suffix: "b" },
-    { divider: 1e6, suffix: "m" },
-    { divider: 1e3, suffix: "k" },
-  ];
-
-  }
+}
 
 
 
-   function formatNumber3(n: number) {
-    for (let i = 0; i < ranges.length; i++) {
-      const { divider, suffix } = ranges[i];
-      if (n >= divider) {
-        return `${n / divider}${suffix}`;
-      }
+
+ function formatNumber3(n: number) {
+  for (let i = 0; i < ranges.length; i++) {
+    const { divider, suffix } = ranges[i];
+    if (n >= divider) {
+      return `${n / divider}${suffix}`;
     }
-    return n.toString();
-    // console.log(n.toString())
   }
-
-
+  return n.toString();
+  // console.log(n.toString())
+}
 
   const chartOptions: ChartOptions<"scatter" | "bar"> = useMemo(
     () => ({
@@ -564,7 +595,7 @@ console.log(text)
       },
 
       onClick: (event, elements, chart) => {
-    
+
         if (!elements.length) {
           return;
         }
@@ -655,7 +686,7 @@ console.log(text)
             display:isYAxisCurrency,
             callback: function (value: number) {
               // console.log('y-ticks', `${symbol ? theSymbol : text}`, symbol, theSymbol)
-              return `${isYAxisCurrency ? text : ""}${formatNumber(value)}`;
+              return `${isYAxisCurrency ? text : ""}${formatNumber3(value)}`;
               // return `${symbol ? theSymbol : text}${formatNumber(value)}`;
             },
           },

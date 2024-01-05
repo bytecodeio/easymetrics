@@ -281,7 +281,7 @@ console.log(fieldOptions2)
         type: 'array',
         label: 'Color Range',
         display: 'colors',
-        default: ['#dd3333', '#80ce5d', '#f78131', '#369dc1', '#c572d3', '#36c1b3', '#b57052', '#ed69af'],
+        default: ['#1A73E8', '#dd3333', '#80ce5d', '#f78131', '#369dc1', '#c572d3', '#36c1b3', '#b57052', '#ed69af'],
         order: 24,
         section: "Style",
       },

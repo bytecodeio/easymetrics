@@ -188,16 +188,7 @@ console.log(lookerVis)
   const dimensionLabel = fields.dimensionsLabel[0];
   const measureLabel = fields.measuresLabel[0];
 
-
-
-
-
 const [firstData = {}] = data;
-
-
-
-
-
 
 
 
@@ -209,7 +200,6 @@ for (const [key, value] of Object.entries(firstData)) {
 
   }
 }
-
 
 
 
@@ -539,9 +529,9 @@ var ranges = [
 else if (text === '€') {
 
 var ranges = [
-  { divider: 1e9, suffix: "b" },
-  { divider: 1e6, suffix: "m" },
-  { divider: 1e3, suffix: "k" },
+  { divider: 1e9, suffix: "Mrd." },
+  { divider: 1e6, suffix: "Mio." },
+  { divider: 1e3, suffix: "Tsd." },
 ];
 
 }
@@ -550,17 +540,44 @@ var ranges = [
 else if (text === '¥') {
 
 var ranges = [
-  { divider: 1e9, suffix: "b" },
-  { divider: 1e6, suffix: "m" },
-  { divider: 1e3, suffix: "k" },
+  { divider: 1e9, suffix: "十亿" },
+  { divider: 1e6, suffix: "千万" },
+  { divider: 1e3, suffix: "	千" },
 ];
 
 }
 
 
+else if (text === '₩') {
+
+var ranges = [
+  { divider: 1e9, suffix: "십억" },
+  { divider: 1e6, suffix: "백만" },
+  { divider: 1e3, suffix: "천" },
+];
+
+}
 
 
+else if (text === '฿') {
 
+var ranges = [
+  { divider: 1e9, suffix: "พันล้าน" },
+  { divider: 1e6, suffix: "ล้าน" },
+  { divider: 1e3, suffix: "พัน" },
+];
+
+}
+
+else{
+
+  var ranges = [
+    { divider: 1e9, suffix: "b" },
+    { divider: 1e6, suffix: "m" },
+    { divider: 1e3, suffix: "k" },
+  ];
+
+}
 
 
 
@@ -575,8 +592,6 @@ var ranges = [
   return n.toString();
   // console.log(n.toString())
 }
-
-
 
 
 
