@@ -534,7 +534,7 @@ else if (text === '¥') {
 var ranges = [
   { divider: 1e9, suffix: "十亿" },
   { divider: 1e6, suffix: "千万" },
-  { divider: 1e3, suffix: "	千" },
+  { divider: 1e3, suffix: "千" },
 ];
 
 }
