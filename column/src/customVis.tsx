@@ -26,58 +26,77 @@ looker.plugins.visualizations.add({
   updateAsync: function (data, element, config, queryResponse, details, done) {
 
 
-    const { dimension_like: dimensionLike } = queryResponse.fields;
+        const { measure_like: measureLike } = queryResponse.fields;
+        const { dimension_like: dimensionLike } = queryResponse.fields;
 
-    const dimensions1 = dimensionLike.map((dimension) => ({
-       label: dimension.label_short ?? dimension.label,
-       name: dimension.name
+        const dimensions1 = dimensionLike.map((dimension) => ({
+          label: dimension.label_short ?? dimension.label,
+          name: dimension.name
 
-
-     }));
-
-
-
-     const { measure_like: measureLike } = queryResponse.fields;
+        }));
 
 
-     const measures1 = measureLike.map((measure) => ({
-       label: measure.label_short ?? measure.label,
-       name: measure.name,
-     }));
+        const measures1 = measureLike.map((measure) => ({
+          label: measure.label_short ?? measure.label,
+          name: measure.name,
+        }));
+
+
+        const fieldOptions = [...dimensions1, ...measures1].map((dim) => ({
+          [dim.label]: queryResponse.data.map(row => row[dim.name].value).join(",")
+        }));
+
+
+        const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
+          [dim.label]: dim.label
+        }));
 
 
 
+        const { measure_like: measureLike } = queryResponse.fields;
+        interface Measure {
+          label: string;
+          name: string;
+        }
 
-     const fieldOptions = [...dimensions1, ...measures1].map((dim) => ({
-         [dim.label]: queryResponse.data.map(row => row[dim.name].value).join(",")
-       }));
+        interface Dimension {
+          label: string;
+          name: string;
+        }
+
+        const measures: Measure[] = measureLike.map((measure) => ({
+          label: measure.label_short ?? measure.label,
+          name: measure.name,
+        }));
+
+        const dimensions: Dimensions[] = dimensionLike.map((dimension) => ({
+          label: dimension.label_short ?? dimension.label,
+          name: dimension.name,
+        }));
+
+        interface FieldOption {
+          [key: string]: string;
+        }
+        const fieldOptions0: FieldOption[] = [...dimensions, ...measures].map((all) => ({
+          [all.label]: all.name,
+        }));
 
 
-
-const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
-    [dim.label]: dim.label
+        console.log(measures[0].name, measures[0].label, "elizabeth")
 
 
-  }));
+        const kpiFieldDefault = measures[0].name;
+        const comparisonFieldDefault = measures.length > 1 ? measures[1].name : "";
+        const gaugeFieldDefault = measures.length > 2 ? measures[2].name : "";
 
-
-  console.log(fieldOptions2, "all labels")
-
+        console.log(fieldOptions)
+        console.log(fieldOptions0)
+        console.log(fieldOptions2)
 
 
     const lookerVis = this;
 
 
-
-      function preloader(){
-          // lookerVis.trigger("registerOptions", configOptions);
-      // lookerVis.trigger("updateConfig", [{   yAxisDropdown: fieldOptions2 }]);
-
-      // lookerVis.trigger("updateConfig", [{ showXGridLines: true }]);
-    }//preloader
-
-    //remove/comment this one to check the website in loading state
-    window.onload = preloader;
 
 
     // config
@@ -154,7 +173,7 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
             label: "Select Currency Symbol",
             display: "select",
             placeholder: "Please Select",
-            values: fieldOptions,
+            values: fieldOptions0,
             order: 26,
             default:'',
             section: "Y-Axis",
@@ -293,7 +312,7 @@ const fieldOptions2 = [...dimensions1, ...measures1].map((dim) => ({
         label: "Choose Y Axis Left Side Value",
         display: "select",
         placeholder: "Please Select",
-        values: fieldOptions,
+        values: fieldOptions0,
         order: 25,
         default:'',
         section: "Y-Axis",

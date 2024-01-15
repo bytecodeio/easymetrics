@@ -333,8 +333,8 @@ let text = cols_to_hide.toString()
           backgroundColor:`${color_range ? colors[0] : colors[0]}`,
           borderColor: `${color_range ? colors[0] : colors[0]}`,
           pointBackgroundColor: `${color_range ? colors[0] : colors[0]}`,
-          // data: data.map((row) => row[measureName].value),
-          data: yAxisLeftValues ? yAxisLeftValues.split(",") : data.map((row) => row[measureName].value),
+          data: yAxisValues,
+          // data: yAxisLeftValues ? yAxisLeftValues.split(",") : data.map((row) => row[measureName].value),
           yAxisID: "yLeft",
           fill,
         });
@@ -486,8 +486,8 @@ let text = cols_to_hide.toString()
       const Content = config.xAxisDropdown.split(",").map((d, i) => ({
       xAxisDropdown: d,
       yAxisDropdown:config.yAxisDropdown.split(",")[i],
-      symbol:config.symbol.split(",")[i],
-      yAxisLeftValues:config.yAxisLeftValues.split(",")[i],
+      // symbol:config.symbol.split(",")[i],
+      // yAxisLeftValues:config.yAxisLeftValues.split(",")[i],
       // yAxisRightDropdown:config.yAxisRightDropdown.split(",")[i],
       // yAxisRightValues:config.yAxisRightValues.split(",")[i],
       // symbol2:config.symbol2.split(",")[i],
@@ -495,10 +495,20 @@ let text = cols_to_hide.toString()
       }))
 
 
-let result = Content.map(function(val, i){ return val.symbol });
+console.log(symbol)
 
-let theSymbol = result[0]
+  const yAxisValues = data.map(item => item[yAxisLeftValues].value)
 
+
+// let result = Content.map(function(val, i){ return val.symbol });
+
+// let theSymbol = result[0]
+
+
+  const theSymbolmap = data.map(item => item[symbol])
+
+
+  const theSymbol = theSymbolmap[0].value
 
 
 // let result2 = Content.map(function(val, i){ return val.symbol2 });
